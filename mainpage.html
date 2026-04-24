@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphura.in - Task Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background:
+      linear-gradient(
+        135deg,
+        rgba(239, 246, 255, 0.98) 0%,
+        rgba(250, 245, 255, 0.95) 50%,
+        rgba(255, 247, 237, 0.98) 100%
+      ),
+      url("img/mainBg2.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      backdrop-filter: blur(1px);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(230, 57, 70, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(25, 118, 210, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 20%, rgba(56, 142, 60, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Navbar */
+    nav {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                  0 2px 8px rgba(230, 57, 70, 0.05);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(230, 57, 70, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    nav:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1),
+                  0 4px 12px rgba(230, 57, 70, 0.08);
+    }
+
+    nav h1 {
+      font-size: 32px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav h1 img {
+      height: 45px;
+      width: auto;
+      filter: drop-shadow(0 4px 12px rgba(230, 57, 70, 0.4));
+      transition: all 0.3s ease;
+    }
+
+    nav h1 img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 6px 16px rgba(230, 57, 70, 0.5));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .nav-links a.login-btn {
+      color: #666;
+      border: 2px solid rgba(230, 57, 70, 0.2);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-links a.login-btn:hover {
+      background: linear-gradient(135deg, rgba(230, 57, 70, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+      border-color: rgba(230, 57, 70, 0.4);
+      color: #e63946;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+    }
+
+    .nav-links a.primary-btn {
+      background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(230, 57, 70, 0.3),
+                  0 2px 8px rgba(230, 57, 70, 0.2);
+    }
+
+    .nav-links a.primary-btn:hover {
+      background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4),
+                  0 4px 12px rgba(230, 57, 70, 0.3);
+      transform: translateY(-2px);
+    }
+
+    #menuBtn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    #mobileMenu {
+      display: none;
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 32px;
+    }
+
+    #mobileMenu a {
+      display: block;
+      padding: 12px 0;
+      color: #666;
+      text-decoration: none;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    #mobileMenu a:last-child {
+      border-bottom: none;
+    }
+
+    #mobileMenu a:hover {
+      color: #e63946;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      #menuBtn {
+        display: block;
+      }
+
+      #mobileMenu.show {
+        display: block;
+      }
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 100px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content h2 {
+      font-size: 56px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1a1a1a 0%, #333 50%, #1a1a1a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+      margin-bottom: 28px;
+      letter-spacing: -1px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-content h2 .highlight {
+      background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #1976d2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content p {
+      font-size: 20px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 580px;
+      font-weight: 400;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-block;
+      cursor: pointer;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease 0.4s both;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+      color: white;
+      box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35),
+                  0 4px 12px rgba(230, 57, 70, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+      box-shadow: 0 12px 32px rgba(230, 57, 70, 0.45),
+                  0 6px 16px rgba(230, 57, 70, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+      color: #333;
+      border: 2px solid rgba(230, 57, 70, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 1) 100%);
+      border-color: rgba(230, 57, 70, 0.4);
+      box-shadow: 0 8px 24px rgba(230, 57, 70, 0.2);
+      transform: translateY(-2px);
+      color: #e63946;
+    }
+
+    .hero-preview {
+      position: relative;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.5) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+                  0 8px 24px rgba(230, 57, 70, 0.08),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
+    .hero-preview::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .preview-dot {
+      box-shadow: 0px 0px 10px 6px whitesmoke;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .preview-dot.red { background-color: #ef4444; }
+    .preview-dot.yellow { background-color: #fbbf24; }
+    .preview-dot.green { background-color: #10b981; }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(230,57,70,0.12), rgba(230,57,70,0.05));
+      color: #d32f2f;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d32f2f;
+      box-shadow: 0 0 0 0 rgba(211,47,47,0.5);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(211,47,47,0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(211,47,47,0); }
+      100% { box-shadow: 0 0 0 0 rgba(211,47,47,0); }
+    }
+
+    .task-board {
+      margin-top: 8px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.8) 100%);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .task-board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .mini-progress {
+      width: 42px;
+      height: 8px;
+      background: #f1f1f1;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mini-progress span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 65%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #10b981, #22c55e);
+      animation: barMove 2.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes barMove {
+      0% { width: 55%; }
+      50% { width: 90%; }
+      100% { width: 60%; }
+    }
+
+    .task-carousel {
+      position: relative;
+      overflow: hidden;
+      height: 230px;
+    }
+
+    .task-track {
+      display: grid;
+      gap: 12px;
+      animation: scrollCards 14s linear infinite;
+    }
+
+    .task-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 1) 100%);
+      border-radius: 14px;
+      padding: 16px 18px;
+      border: 1px solid rgba(230, 57, 70, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
+                  0 2px 8px rgba(230, 57, 70, 0.05);
+      display: grid;
+      gap: 8px;
+      transform: translateZ(0);
+      transition: all 0.3s ease;
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12),
+                  0 4px 12px rgba(230, 57, 70, 0.1);
+      border-color: rgba(230, 57, 70, 0.2);
+    }
+
+    .task-card .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .task-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+
+    .task-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .task-progress {
+      width: 100%;
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .task-progress span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #e63946, #f97316);
+      animation: barWave 6s ease-in-out infinite;
+    }
+
+    .task-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    .task-small .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .mini-analytics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini-analytics .chip {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(230, 57, 70, 0.08) 100%);
+      border: 1px solid rgba(230, 57, 70, 0.2);
+      border-radius: 12px;
+      font-size: 13px;
+      color: #c1121f;
+      text-align: center;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(230, 57, 70, 0.15),
+                  0 2px 8px rgba(230, 57, 70, 0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .mini-analytics .chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.25),
+                  0 4px 12px rgba(230, 57, 70, 0.15);
+    }
+
+    @keyframes barWave {
+      0% { width: 35%; }
+      50% { width: 88%; }
+      100% { width: 45%; }
+    }
+
+    @keyframes scrollCards {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-52%); }
+      100% { transform: translateY(0); }
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 80px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .features-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #e63946, transparent);
+      border-radius: 2px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                  0 2px 8px rgba(230, 57, 70, 0.05);
+      padding: 40px;
+      border-radius: 20px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(230, 57, 70, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .feature-card:hover::before {
+      left: 100%;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 16px 48px rgba(230, 57, 70, 0.2),
+                  0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(230, 57, 70, 0.3);
+    }
+
+    .feature-card h4 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(230, 57, 70, 0.1);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      text-align: center;
+      color: #666;
+      font-size: 15px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #e63946, #1976d2, #388e3c);
+      border-radius: 0 0 3px 3px;
+    }
+
+    @media (max-width: 968px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-content h2 {
+        font-size: 36px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ================= NAVBAR ================= -->
+  <nav>
+    <h1><img src="img/bg removed.png" alt="Graphura"></h1>
+
+    <!-- Desktop Menu -->
+    <div class="nav-links">
+      <a href="login.html" class="primary-btn">Get Started</a>
+      <a href="login.html" class="login-btn">Login</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="menuBtn">☰</button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu">
+    <a href="login.html">Get Started</a>
+    <a href="login.html">Login</a>
+  </div>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero-section">
+    <!-- Left -->
+    <div class="hero-content">
+      <h2>
+        Manage Tasks <br>
+        <span class="highlight">Like a Pro</span>
+      </h2>
+
+      <p>
+        A powerful and modern task management dashboard designed to boost productivity
+        and keep everything organized in one place.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="login.html" class="btn btn-primary">Get Started</a>
+        <a href="login.html" class="btn btn-secondary">Login</a>
+      </div>
+    </div>
+
+    <!-- Right Dashboard Preview -->
+    <div class="hero-preview">
+      <div class="preview-header">
+        <div class="preview-dots">
+          <div class="preview-dot red"></div>
+          <div class="preview-dot yellow"></div>
+          <div class="preview-dot green"></div>
+        </div>
+        <span class="live-badge"><span class="live-dot"></span>Live Analytics</span>
+      </div>
+
+      <div class="task-board">
+        <div class="task-board-header">
+          <span>Active Sprint Board</span>
+          <div class="mini-progress"><span></span></div>
+        </div>
+
+        <div class="task-carousel">
+          <div class="task-track">
+            <div class="task-card">
+              <div class="top">
+                Dashboard Revamp
+                <span class="task-pill">In Review</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot"></span>UI/UX</span>
+                <span>Due: Today</span>
+              </div>
+              <div class="task-progress"><span style="width: 78%;"></span></div>
+            </div>
+
+            <div class="task-card">
+              <div class="top">
+                API Integration
+                <span class="task-pill" style="background: linear-gradient(135deg,#10b981,#22c55e);">In Progress</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot" style="background:#10b981;"></span>Backend</span>
+                <span>ETA: 2h</span>
+              </div>
+              <div class="task-progress"><span style="width: 62%;"></span></div>
+            </div>
+
+            <div class="task-card">
+              <div class="top">
+                Team Standup
+                <span class="task-pill" style="background: linear-gradient(135deg,#f97316,#fb7185);">Next</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot" style="background:#f97316;"></span>Ops</span>
+                <span>11:30 AM</span>
+              </div>
+              <div class="task-progress"><span style="width: 44%;"></span></div>
+            </div>
+
+            <div class="task-card">
+              <div class="top">
+                QA Regression
+                <span class="task-pill" style="background: linear-gradient(135deg,#0ea5e9,#6366f1);">Testing</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot" style="background:#0ea5e9;"></span>QA</span>
+                <span>25 cases</span>
+              </div>
+              <div class="task-progress"><span style="width: 58%;"></span></div>
+            </div>
+
+            <!-- duplicate set for smooth loop -->
+            <div class="task-card">
+              <div class="top">
+                Dashboard Revamp
+                <span class="task-pill">In Review</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot"></span>UI/UX</span>
+                <span>Due: Today</span>
+              </div>
+              <div class="task-progress"><span style="width: 78%;"></span></div>
+            </div>
+
+            <div class="task-card">
+              <div class="top">
+                API Integration
+                <span class="task-pill" style="background: linear-gradient(135deg,#10b981,#22c55e);">In Progress</span>
+              </div>
+              <div class="task-meta">
+                <span class="task-small"><span class="dot" style="background:#10b981;"></span>Backend</span>
+                <span>ETA: 2h</span>
+              </div>
+              <div class="task-progress"><span style="width: 62%;"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini-analytics">
+          <div class="chip">76% On Track</div>
+          <div class="chip">12 Live</div>
+          <div class="chip">3 Pending</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="features-section">
+    <div class="features-grid">
+      <div class="feature-card">
+        <h4>Smart Tasks</h4>
+        <p>Create, edit & prioritize tasks easily.</p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Analytics</h4>
+        <p>Visual insights for better decisions.</p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Secure</h4>
+        <p>Your data is safe and encrypted.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    © 2026 Graphura.in. All rights reserved.
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('show');
+      });
+    }
+  </script>
+</body>
+</html>

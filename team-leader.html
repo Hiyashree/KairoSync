@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Team Leader Dashboard</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Dark Mode Styles */
+        .dark body {
+            background: #1a1a1a;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+        }
+        
+        .dark .sidebar {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+            border-right: 1px solid #404040 !important;
+        }
+        
+        .dark .sidebar-logo {
+            border-bottom: 1px solid #404040 !important;
+        }
+        
+        .dark .header {
+            background-color: #2d2d2d !important;
+            border-bottom-color: #404040 !important;
+        }
+        
+        .dark .sidebar-item {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .sidebar-item:hover {
+            background-color: #3a3a3a !important;
+            color: #e63946 !important;
+        }
+        
+        .dark .sidebar-item.active {
+            background-color: #3a1a1a !important;
+            color: #e63946 !important;
+        }
+        
+        .dark .search-bar input {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+        
+        .dark .search-bar input:focus {
+            border-color: #e63946;
+            background-color: #3a3a3a !important;
+        }
+        
+        .dark .user-name {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .user-role {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .notification-icon {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .notification-icon:hover {
+            color: #e63946 !important;
+        }
+        
+        .dark .chart-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%) !important;
+            border-color: #404040 !important;
+        }
+        
+        .dark .chart-title {
+            color: #e63946 !important;
+            -webkit-text-fill-color: #e63946 !important;
+        }
+        
+        .dark [style*="background: #fff"],
+        .dark [style*="background-color: #fff"] {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark [style*="color: #333"] {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark [style*="color: #666"] {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark [style*="border: 1px solid #e0e0e0"],
+        .dark [style*="border: 2px solid #e0e0e0"] {
+            border-color: #404040 !important;
+        }
+        
+        .dark input[type="text"],
+        .dark input[type="search"],
+        .dark select {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .summary-card {
+                padding: 16px;
+            }
+
+            .sidebar-item {
+                padding: 10px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 12px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .summary-card {
+                padding: 12px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            color: #e63946;
+            background-color: #fff5f5;
+            border-left: 3px solid #e63946;
+        }
+
+        .sidebar-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-item.logout {
+            margin-top: auto;
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 16px 32px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #e63946, #1976d2) 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            min-width: 120px;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #e63946;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .search-bar svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            color: #666;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background-color: #e63946;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .notification-dropdown.show {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .notification-clear {
+            background: none;
+            border: none;
+            color: #e63946;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 4px 8px;
+        }
+
+        .notification-clear:hover {
+            text-decoration: underline;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #fff5f5;
+        }
+
+        .notification-item.unread:hover {
+            background-color: #ffebee;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .notification-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .user-info:hover {
+            background-color: #f5f5f5;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            cursor: pointer;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        .settings-content {
+            padding: 0;
+        }
+
+        .dashboard-content {
+            display: block;
+        }
+
+        /* Leader Dashboard Components */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid rgba(230, 57, 70, 0.1);
+            min-height: 550px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e63946, #1976d2);
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .chart-container {
+            height: 450px;
+            width: 100%;
+            min-height: 450px;
+            position: relative;
+        }
+        
+        .chart-container canvas {
+            max-height: 100% !important;
+        }
+
+        .approval-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid rgba(25, 118, 210, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .approval-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1976d2, #e63946);
+        }
+
+        .approval-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1976d2 0%, #e63946 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .approval-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            border: 2px solid rgba(230, 57, 70, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .approval-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+            border-color: rgba(230, 57, 70, 0.3);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+        }
+
+        .btn-approve {
+            flex: 1;
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-approve:hover {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+        }
+
+        .btn-reject {
+            flex: 1;
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(230, 57, 70, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-reject:hover {
+            background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+        }
+
+        /* Table Styling */
+        .workload-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid rgba(230, 57, 70, 0.1);
+        }
+
+        .workload-header {
+            padding: 24px 28px;
+            border-bottom: 2px solid rgba(230, 57, 70, 0.1);
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.03) 0%, rgba(25, 118, 210, 0.03) 100%);
+        }
+
+        .workload-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            background: #f9fafb;
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+
+        .data-table tbody td {
+            padding: 16px 24px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .employee-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Progress Bars */
+        .progress-bar-bg {
+            width: 100%;
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #e63946 0%, #1976d2 100%);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.3);
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-header button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .members-checkbox-container {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .member-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        
+        .member-checkbox-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .member-checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #e63946;
+        }
+
+        .input-field {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: #fff;
+            padding: 12px 16px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #e63946;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-blue { background: #eff6ff; color: #2563eb; }
+        .badge-green { background: #e8f5e9; color: #2e7d32; }
+        .badge-yellow { background: #fff3e0; color: #f57c00; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text"><img src="img/bg removed.png" alt="Graphura"></div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="team-leader.html" class="sidebar-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="taskleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    <span>Tasks</span>
+                    </a>
+                <a href="team-info.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <span>Team Info</span>
+</a>
+                <a href="calendarleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                    </a>
+                <a href="settingsleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">Team Leader Dashboard</h1>
+                    <div class="search-bar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search tasks, projects, or team members...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    
+                    <div class="notification-container">
+                        <svg class="notification-icon" id="notificationIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="notification-clear" id="clearAllNotifications">Clear all</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                     <button onclick="toggleModal()" class="btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="  width: 18px; height: 18px; ">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    <span>Assign Task</span>
+                </button>
+                    <div class="user-info" id="userInfoClickable">
+                        <div class="user-details">
+                            <div class="user-name" id="userName">Team Leader</div>
+                            <div class="user-role">Leader</div>
+                        </div>
+                        <div class="user-avatar" id="headerUserAvatar">TL</div>
+                    </div>
+               
+                </div>
+            </header>
+
+            <!-- Content Wrapper -->
+                <div class="content-wrapper">
+                <div class="content dashboard-content" id="dashboardContent">
+                    <!-- Dashboard Grid -->
+                    <div class="dashboard-grid">
+                        <div class="chart-card">
+                            <h3 class="chart-title">Project Health Index</h3>
+                            <div class="chart-container">
+                                <canvas id="projectHealthChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="approval-card">
+                            <h3 class="approval-title">Approval Queue</h3>
+                            <div id="approvalQueue">
+                                <!-- Approval items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Workload Monitoring -->
+                    <div class="workload-card">
+                        <div class="workload-header">
+                            <h3 class="workload-title">Team Workload Monitoring</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Active Tasks</th>
+                                        <th>Status</th>
+                                        <th>Progress</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teamWorkloadTable">
+                                    <!-- Team members will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Assignment Modal -->
+     
+   <div id="taskModal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal-header">
+            <h3>Assign New Task</h3>
+            <button onclick="toggleModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow-y: auto; flex: 1; padding: 24px;">
+            <form id="taskForm" onsubmit="createTask(event)">
+                <input type="text" id="taskTitle" class="input-field" placeholder="Task Title" required>
+
+                <select id="taskProject" class="input-field" required onchange="updateDomainDisplay()">
+                    <option value="">Select Project...</option>
+                </select>
+                
+                <div id="domainDisplay" style="padding: 12px; background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(186, 104, 200, 0.1)); border-radius: 8px; border: 1px solid rgba(230, 57, 70, 0.2); margin-bottom: 16px; display: none;">
+                    <span style="font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Domain:</span>
+                    <span id="selectedDomain" style="font-size: 14px; font-weight: 600; color: #e63946; margin-left: 8px;"></span>
+                </div>
+
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #333;">Assign to Team Member(s):</label>
+                <div id="taskAssigneeContainer" class="members-checkbox-container" style="max-height: 200px; overflow-y: auto; border: 2px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                    </div>
+
+                <div class="input-group">
+                    <select id="taskPriority" class="input-field" required>
+                        <option value="">Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                    <input type="date" id="taskDueDate" class="input-field" required>
+                </div>
+
+                <textarea id="taskDescription" class="input-field" rows="4" placeholder="Task Description / Instructions"></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">Create & Assign</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script>
+        
+        // Load and apply settings (dark mode, etc.)
+        function loadSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            const role = currentUser.role;
+            const settingsKey = 'settings_' + role;
+            const settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+            if (settings.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        loadSettings();
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith('settings_')) loadSettings();
+        });
+        window.addEventListener('settingsUpdated', loadSettings);
+        
+        // Get current user and data
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let teams = JSON.parse(localStorage.getItem('teams')) || [];
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Authentication and Role Check
+        (function() {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (currentUser.role !== 'leader') {
+                alert('Access denied. Team Leader privileges required.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update user display
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl) userNameEl.textContent = currentUser.name || 'Team Leader';
+            
+            // Load profile picture for header avatar
+            loadProfilePicture();
+            
+            // Add click handler to redirect to settings page
+            const userInfoEl = document.querySelector('.user-info');
+            if (userInfoEl) {
+                userInfoEl.addEventListener('click', function() {
+                    window.location.href = 'settingsleader.html';
+                });
+            }
+        })();
+
+        // Load team members for current leader
+        function getTeamMembers() {
+            // Reload teams from localStorage to get real-time updates
+            const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+            const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
+            teams = currentTeams;
+            users = currentUsers;
+            
+            if (!currentUser || !currentUser.name) {
+                console.warn('No current user found');
+                return [];
+            }
+            
+            const leaderTeams = teams.filter(team => {
+                const teamLeader = team.leader || team.teamLeader;
+                return teamLeader === currentUser.name || 
+                       (teamLeader && currentUser.name && teamLeader.toLowerCase() === currentUser.name.toLowerCase()) ||
+                       (teamLeader && currentUser.email && teamLeader === currentUser.email);
+            });
+            
+            console.log('Leader teams found:', leaderTeams.length, 'for leader:', currentUser.name);
+            
+            let allMembers = [];
+            
+            leaderTeams.forEach(team => {
+                if (team.members && Array.isArray(team.members)) {
+                    team.members.forEach(member => {
+                        if (typeof member === 'string') {
+                            allMembers.push(member);
+                        } else if (member && member.name) {
+                            allMembers.push(member.name);
+                        } else if (member && member.email) {
+                            // Try to get name from users if only email is stored
+                            const user = users.find(u => u.email === member.email);
+                            if (user && user.name) {
+                                allMembers.push(user.name);
+                            } else {
+                                // Use email as fallback
+                                allMembers.push(member.email);
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // Remove duplicates
+            const uniqueMembers = [...new Set(allMembers)];
+            console.log('Team members:', uniqueMembers);
+            return uniqueMembers;
+        }
+
+        // Load projects and team members into modal dropdowns
+        function loadModalDropdowns() {
+            const projectSelect = document.getElementById('taskProject');
+            const assigneeContainer = document.getElementById('taskAssigneeContainer');
+            
+            if (projectSelect) {
+                // Only show projects where current user is the leader
+                projectSelect.innerHTML = '<option value="">Select Project...</option>';
+                const leaderProjects = projects.filter(p => p.leader === currentUser.name);
+                leaderProjects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    projectSelect.appendChild(option);
+                });
+                
+                if (leaderProjects.length === 0) {
+                    projectSelect.innerHTML = '<option value="">No projects assigned to you</option>';
+                }
+            }
+            
+            if (assigneeContainer) {
+                assigneeContainer.innerHTML = '';
+                const teamMembers = getTeamMembers();
+                teamMembers.forEach(member => {
+                    const checkboxItem = document.createElement('div');
+                    checkboxItem.className = 'member-checkbox-item';
+                    checkboxItem.innerHTML = `
+                        <input type="checkbox" id="assignee-${member}" value="${member}">
+                        <label for="assignee-${member}" style="cursor: pointer; flex: 1;">${member}</label>
+                    `;
+                    assigneeContainer.appendChild(checkboxItem);
+                });
+                
+                if (teamMembers.length === 0) {
+                    assigneeContainer.innerHTML = '<div style="padding: 12px; color: #999; font-size: 14px; text-align: center;">No team members found</div>';
+                }
+            }
+        }
+
+        // Toggle Assign Task Modal
+        function toggleModal() {
+            const modal = document.getElementById('taskModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                loadModalDropdowns();
+            }
+        }
+        // Update domain display when project is selected
+        function updateDomainDisplay() {
+            const projectSelect = document.getElementById('taskProject');
+            const projectId = parseInt(projectSelect.value);
+            const domainDisplay = document.getElementById('domainDisplay');
+            const selectedDomainSpan = document.getElementById('selectedDomain');
+            
+            if (projectId && domainDisplay && selectedDomainSpan) {
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                const project = projects.find(p => p.id === projectId);
+                if (project && project.domain) {
+                    selectedDomainSpan.textContent = project.domain;
+                    domainDisplay.style.display = 'block';
+                } else {
+                    domainDisplay.style.display = 'none';
+                }
+            } else if (domainDisplay) {
+                domainDisplay.style.display = 'none';
+            }
+        }
+
+        // Create task and assign to team member(s)
+      function createTask(event) {
+    event.preventDefault();
+    
+    // Safety: Load current data to ensure no data loss
+    let currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+    const teams = JSON.parse(localStorage.getItem('teams')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    const title = document.getElementById('taskTitle').value.trim();
+    const projectId = parseInt(document.getElementById('taskProject').value);
+    const assigneeCheckboxes = document.querySelectorAll('#taskAssigneeContainer input[type="checkbox"]:checked');
+    const selectedAssignees = Array.from(assigneeCheckboxes).map(cb => cb.value);
+    const priority = document.getElementById('taskPriority').value;
+    const dueDate = document.getElementById('taskDueDate').value;
+    const description = document.getElementById('taskDescription').value.trim();
+    
+    if (!title || !projectId || selectedAssignees.length === 0 || !priority || !dueDate) {
+        alert('Please fill in all required fields and select at least one team member.');
+        return;
+    }
+    
+    // Validate that project exists in database
+    const project = projects.find(p => p.id === projectId);
+    if (!project) {
+        alert('Invalid project. Please select a valid project.');
+        return;
+    }
+    
+    // Verify current user is the leader of this project
+    const projectTeam = teams.find(t => t.id === project.teamId);
+    if (!projectTeam || projectTeam.leader !== currentUser.name) {
+        alert('You can only create tasks for projects where you are the leader.');
+        return;
+    }
+    
+    // Inherit domain from project
+    const domain = project.domain || 'Not specified';
+    
+    selectedAssignees.forEach((assignee, index) => {
+        const newTask = {
+            id: Date.now() + index + Math.random(),
+            title: selectedAssignees.length > 1 ? `${title} (${assignee})` : title,
+            domain: domain, // Inherit domain from project
+            description: description || '',
+            projectId: projectId,
+            assignedTo: assignee,
+            status: 'Pending',
+            priority: priority,
+            dueDate: dueDate,
+            createdBy: currentUser.name,
+            createdAt: new Date().toISOString()
+        };
+        
+        currentTasks.push(newTask);
+    });
+    
+    // Update global and local storage
+    tasks = currentTasks;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    
+    // Reset and UI Refresh
+    document.getElementById('taskForm').reset();
+    document.getElementById('taskAssigneeContainer').innerHTML = '';
+    toggleModal();
+    loadTeamWorkload();
+    loadApprovalQueue();
+    if (typeof initializeChart === 'function') initializeChart();
+    
+    alert(`Task assigned successfully to ${selectedAssignees.length} member(s).`);
+}
+        // Load team workload data
+        function loadTeamWorkload() {
+            // Reload data from localStorage to get real-time updates
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+            
+            // Update global variables
+            tasks = currentTasks;
+            teams = currentTeams;
+            
+            const teamMembers = getTeamMembers();
+            const tableBody = document.getElementById('teamWorkloadTable');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (teamMembers.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #999;">No team members found</td></tr>';
+                return;
+            }
+            
+            teamMembers.forEach(member => {
+                // Find user ID if member is a name
+                const user = users.find(u => u.name === member);
+                const memberTasks = tasks.filter(task => {
+                    const assignee = task.assignedTo || task.assignee;
+                    return assignee === member || 
+                           (user && task.assigneeId && task.assigneeId === user.id) ||
+                           (task.assigneeId && user && String(task.assigneeId) === String(user.id));
+                });
+                const activeTasks = memberTasks.filter(task => task.status !== 'Completed');
+                const completedTasks = memberTasks.filter(task => task.status === 'Completed');
+                const totalTasks = memberTasks.length;
+                const progress = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+                
+                // Determine status
+                let status = 'Available';
+                let statusClass = 'badge-green';
+                if (activeTasks.length > 5) {
+                    status = 'Busy';
+                    statusClass = 'badge-yellow';
+                } else if (activeTasks.length > 8) {
+                    status = 'Overloaded';
+                    statusClass = 'badge-blue';
+                }
+                
+                const row = document.createElement('tr');
+                const initials = member.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="employee-name-cell">
+                            <div class="avatar-circle">${initials}</div>
+                            <span style="font-weight: 600; color: #333;">${member}</span>
+                        </div>
+                    </td>
+                    <td>${activeTasks.length} Tasks</td>
+                    <td><span class="badge ${statusClass}">${status}</span></td>
+                    <td style="width: 200px;">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <button onclick="toggleModal()" style="background: none; border: none; color: #e63946; cursor: pointer; font-size: 14px;">Assign Task</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Load Approval Queue
+        function loadApprovalQueue() {
+            const approvalQueue = document.getElementById('approvalQueue');
+            if (!approvalQueue) {
+                console.error('Approval queue element not found');
+                return;
+            }
+            
+            // Reload data from localStorage to get real-time updates
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentProjects = JSON.parse(localStorage.getItem('projects')) || [];
+            const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+            const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Update global variables
+            tasks = currentTasks;
+            projects = currentProjects;
+            teams = currentTeams;
+            users = currentUsers;
+            
+            const teamMembers = getTeamMembers();
+            
+            // Debug logging
+            console.log('Team members:', teamMembers);
+            console.log('Total tasks:', tasks.length);
+            console.log('Completed tasks:', tasks.filter(t => t.status === 'Completed').length);
+            
+            const pendingApprovals = tasks.filter(task => {
+                // Check multiple ways a task might be assigned
+                const assignee = task.assignedTo || task.assignee || (task.assigneeId ? users.find(u => u.id === task.assigneeId)?.name : null);
+                const isTeamMember = teamMembers.includes(assignee) || 
+                                   (task.assigneeId && teamMembers.some(member => {
+                                       const user = users.find(u => u.name === member);
+                                       return user && user.id === task.assigneeId;
+                                   }));
+                
+                const isCompleted = task.status === 'Completed';
+                const needsApproval = !task.approved;
+                
+                // Debug individual task
+                if (isCompleted && needsApproval) {
+                    console.log('Task found:', task.title, 'Assignee:', assignee, 'Is team member:', isTeamMember);
+                }
+                
+                return isTeamMember && isCompleted && needsApproval;
+            });
+            
+            console.log('Pending approvals:', pendingApprovals.length);
+            
+            if (pendingApprovals.length === 0) {
+                approvalQueue.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #999;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 48px; height: 48px; margin: 0 auto 16px; opacity: 0.5;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p style="font-size: 14px; font-weight: 500;">No tasks pending approval</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            approvalQueue.innerHTML = pendingApprovals.map(task => {
+                // Try multiple ways to match project ID
+                const project = projects.find(p => 
+                    p.id === task.projectId || 
+                    p.id === parseInt(task.projectId) || 
+                    String(p.id) === String(task.projectId)
+                );
+                const assigneeName = task.assignedTo || task.assignee || (task.assigneeId ? (users.find(u => u.id === task.assigneeId)?.name || 'Unassigned') : 'Unassigned');
+                const initials = assigneeName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                // Handle task ID properly for onclick
+                const taskId = typeof task.id === 'string' ? `"${task.id}"` : task.id;
+                
+                return `
+                    <div class="approval-item">
+                        <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                            <div class="avatar-circle" style="flex-shrink: 0;">${initials}</div>
+                            <div style="flex: 1;">
+                                <h4 style="font-size: 15px; font-weight: 700; color: #333; margin-bottom: 4px;">${task.title || 'Untitled Task'}</h4>
+                                <p style="font-size: 13px; color: #666; margin-bottom: 6px;">${project ? project.name : 'No Project'}</p>
+                                <p style="font-size: 12px; color: #999;">Assigned to: ${assigneeName}</p>
+                            </div>
+                        </div>
+                        ${task.description ? `<p style="font-size: 13px; color: #666; margin-bottom: 12px; padding: 12px; background: rgba(230, 57, 70, 0.05); border-radius: 8px; border-left: 3px solid #e63946;">${task.description}</p>` : ''}
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-approve" onclick="approveTask(${taskId})">Approve</button>
+                            <button class="btn-reject" onclick="rejectTask(${taskId})">Request Changes</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Approve Task
+        function approveTask(taskId) {
+            // Reload tasks from localStorage
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const task = currentTasks.find(t => t.id === taskId || t.id === parseInt(taskId) || t.id === String(taskId));
+            if (!task) {
+                alert('Task not found');
+                return;
+            }
+            
+            // Prevent duplicate approvals
+            if (task.approved) {
+                const undo = confirm(`This task is already approved by ${task.approvedBy || 'someone'}. Do you want to undo the approval?`);
+                if (undo) {
+                    task.approved = false;
+                    task.approvedBy = null;
+                    task.approvedAt = null;
+                    
+                    tasks = currentTasks;
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    
+                    // Create notification
+                    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                    notifications.push({
+                        id: Date.now(),
+                        title: 'Task Approval Undone',
+                        message: `Approval for "${task.title}" has been undone by ${currentUser.name}`,
+                        targetUser: task.assignedTo || task.assignee || (task.assigneeId ? (users.find(u => u.id === task.assigneeId)?.name || null) : null),
+                        targetRole: 'employee',
+                        from: currentUser.name,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    });
+                    localStorage.setItem('notifications', JSON.stringify(notifications));
+                    
+                    loadApprovalQueue();
+                    loadTeamWorkload();
+                    loadNotifications();
+                }
+                return;
+            }
+            
+            task.approved = true;
+            task.approvedBy = currentUser.name;
+            task.approvedAt = new Date().toISOString();
+            
+            // Update global variable
+            tasks = currentTasks;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Create notification
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.push({
+                id: Date.now(),
+                title: 'Task Approved',
+                message: `Your task "${task.title}" has been approved by ${currentUser.name}`,
+                targetUser: task.assignedTo || task.assignee || (task.assigneeId ? (users.find(u => u.id === task.assigneeId)?.name || null) : null),
+                targetRole: 'employee',
+                from: currentUser.name,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            loadApprovalQueue();
+            loadTeamWorkload();
+            loadNotifications();
+        }
+        
+        // Undo Last Two Approvals - Helper function
+        function undoLastTwoApprovals() {
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
+            users = currentUsers;
+            
+            const teamMembers = getTeamMembers();
+            
+            // Find approved tasks that belong to team members, sorted by approval time (most recent first)
+            const approvedTasks = currentTasks.filter(task => {
+                if (!task.approved || task.status !== 'Completed') return false;
+                
+                const assignee = task.assignedTo || task.assignee || (task.assigneeId ? users.find(u => u.id === task.assigneeId)?.name : null);
+                const isTeamMember = teamMembers.includes(assignee) || 
+                                   (task.assigneeId && teamMembers.some(member => {
+                                       const user = users.find(u => u.name === member);
+                                       return user && user.id === task.assigneeId;
+                                   }));
+                
+                return isTeamMember;
+            }).sort((a, b) => {
+                // Sort by approvedAt timestamp, most recent first
+                const timeA = a.approvedAt ? new Date(a.approvedAt).getTime() : 0;
+                const timeB = b.approvedAt ? new Date(b.approvedAt).getTime() : 0;
+                return timeB - timeA;
+            });
+            
+            if (approvedTasks.length === 0) {
+                alert('No approved tasks found to undo.');
+                return;
+            }
+            
+            // Undo the last 2 (or fewer if less than 2 exist)
+            const tasksToUndo = approvedTasks.slice(0, 2);
+            
+            tasksToUndo.forEach(task => {
+                task.approved = false;
+                task.approvedBy = null;
+                task.approvedAt = null;
+            });
+            
+            // Update localStorage
+            tasks = currentTasks;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Create notifications
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            tasksToUndo.forEach(task => {
+                notifications.push({
+                    id: Date.now() + Math.random(),
+                    title: 'Task Approval Undone',
+                    message: `Approval for "${task.title}" has been undone by ${currentUser.name}`,
+                    targetUser: task.assignedTo || task.assignee || (task.assigneeId ? (users.find(u => u.id === task.assigneeId)?.name || null) : null),
+                    targetRole: 'employee',
+                    from: currentUser.name,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // Refresh the UI
+            loadApprovalQueue();
+            loadTeamWorkload();
+            loadNotifications();
+            
+            alert(`Successfully undone approval for ${tasksToUndo.length} task(s). They have been returned to the approval queue.`);
+        }
+        
+        // Reject Task
+        function rejectTask(taskId) {
+            // Reload tasks from localStorage
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const task = currentTasks.find(t => t.id === taskId || t.id === parseInt(taskId) || t.id === String(taskId));
+            if (!task) {
+                alert('Task not found');
+                return;
+            }
+            
+            const reason = prompt('Please provide feedback for requested changes:');
+            if (!reason) return;
+            
+            task.status = 'In Progress';
+            task.approved = false;
+            task.rejectionReason = reason;
+            task.rejectedBy = currentUser.name;
+            task.rejectedAt = new Date().toISOString();
+            
+            // Update global variable
+            tasks = currentTasks;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Create notification
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.push({
+                id: Date.now(),
+                title: 'Task Changes Requested',
+                message: `Changes requested for "${task.title}": ${reason}`,
+                targetUser: task.assignedTo || task.assignee || (task.assigneeId ? (users.find(u => u.id === task.assigneeId)?.name || null) : null),
+                targetRole: 'employee',
+                from: currentUser.name,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            loadApprovalQueue();
+            loadTeamWorkload();
+            loadNotifications();
+        }
+
+        // Initialize chart
+        function initializeChart() {
+            const canvas = document.getElementById('projectHealthChart');
+            if (!canvas) {
+                console.error('Chart canvas element not found');
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Could not get canvas context');
+                return;
+            }
+            
+            // Destroy existing chart if it exists and is a valid Chart instance
+            if (window.projectHealthChart && typeof window.projectHealthChart.destroy === 'function') {
+                try {
+                    window.projectHealthChart.destroy();
+                } catch (e) {
+                    console.warn('Error destroying existing chart:', e);
+                }
+            }
+            
+            // Reload data from localStorage to get real-time updates
+            const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+            
+            // Update global variables
+            tasks = currentTasks;
+            teams = currentTeams;
+            
+            // Calculate team efficiency (based on task completion)
+            const teamMembers = getTeamMembers();
+            const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
+            users = currentUsers;
+            
+            console.log('Calculating chart for team members:', teamMembers);
+            console.log('Total tasks in storage:', tasks.length);
+            
+            const teamTasks = tasks.filter(task => {
+                const assignee = task.assignedTo || task.assignee || (task.assigneeId ? users.find(u => u.id === task.assigneeId)?.name : null);
+                const matches = teamMembers.includes(assignee) || 
+                       (task.assigneeId && teamMembers.some(member => {
+                           const user = users.find(u => u.name === member);
+                           return user && user.id === task.assigneeId;
+                       }));
+                return matches;
+            });
+            
+            console.log('Team tasks found:', teamTasks.length);
+            
+            const completedCount = teamTasks.filter(t => t.status === 'Completed').length;
+            const totalCount = teamTasks.length;
+            const efficiency = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 50;
+            
+            console.log('Efficiency calculated:', efficiency, '% (Completed:', completedCount, 'Total:', totalCount, ')');
+            
+            // Get tasks from the last 7 days for real-time data
+            const now = new Date();
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            // Calculate efficiency for each of the last 7 days
+            const labels = [];
+            const data = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                labels.push(dayName);
+                
+                // Get tasks created before or on this day
+                const tasksUpToDate = teamTasks.filter(task => {
+                    const taskDate = task.createdAt ? new Date(task.createdAt) : new Date(0);
+                    return taskDate <= date;
+                });
+                
+                // Calculate efficiency up to this date
+                const completedUpToDate = tasksUpToDate.filter(t => {
+                    if (t.status === 'Completed') {
+                        const completedDate = t.completedAt ? new Date(t.completedAt) : (t.updatedAt ? new Date(t.updatedAt) : new Date(0));
+                        return completedDate <= date;
+                    }
+                    return false;
+                }).length;
+                
+                const dayEfficiency = tasksUpToDate.length > 0 ? Math.round((completedUpToDate / tasksUpToDate.length) * 100) : (totalCount > 0 ? efficiency : 50);
+                data.push(Math.max(0, Math.min(100, dayEfficiency)));
+            }
+            
+            // Ensure we have 7 data points - always show something
+            while (data.length < 7) {
+                data.push(efficiency || 50);
+            }
+            
+            // If all data is 0 or empty, fill with efficiency or default
+            if (data.length === 7 && data.every(d => d === 0)) {
+                const defaultVal = totalCount > 0 ? efficiency : 50;
+                for (let i = 0; i < 7; i++) {
+                    data[i] = defaultVal;
+                }
+            }
+            
+            console.log('Chart will render with data:', data, 'labels:', labels);
+            
+            // Ensure Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded');
+                const chartContainer = canvas.parentElement;
+                if (chartContainer) {
+                    chartContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: #999;">Chart library not loaded. Please refresh the page.</p>';
+                }
+                return;
+            }
+            
+            try {
+                window.projectHealthChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Efficiency',
+                            data: data,
+                            borderColor: '#e63946',
+                            backgroundColor: 'rgba(230, 57, 70, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#e63946',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: '#1976d2',
+                            pointHoverBorderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                top: 5,
+                                bottom: 5,
+                                left: 5,
+                                right: 5
+                            }
+                        },
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                borderColor: '#e63946',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true, 
+                                max: 100,
+                                min: 0,
+                                grid: { color: 'rgba(230, 57, 70, 0.1)' },
+                                ticks: { 
+                                    color: '#666', 
+                                    font: { size: 12 },
+                                    stepSize: 10
+                                }
+                            },
+                            x: { 
+                                grid: { display: false },
+                                ticks: { 
+                                    color: '#666', 
+                                    font: { size: 12 },
+                                    maxRotation: 0,
+                                    minRotation: 0
+                                }
+                            }
+                        }
+                    }
+                });
+                console.log('Chart created successfully');
+            } catch (error) {
+                console.error('Error creating chart:', error);
+                const chartContainer = canvas.parentElement;
+                if (chartContainer) {
+                    chartContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: #999;">Error loading chart. Please refresh the page.</p>';
+                }
+            }
+        }
+
+        // Notification system (same as employee.html)
+        function loadNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            if (!currentUser) return;
+            
+            const userNotifications = notifications
+                .filter(n => n.targetRole === currentUser.role || n.targetRole === 'all' || (n.targetUser && n.targetUser === currentUser.name))
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            const unreadCount = userNotifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+            
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.classList.add('show');
+                } else {
+                    badge.classList.remove('show');
+                }
+            }
+            
+            if (notificationList) {
+                if (userNotifications.length === 0) {
+                    notificationList.innerHTML = '<div class="notification-empty"><p>No notifications</p></div>';
+                } else {
+                    notificationList.innerHTML = userNotifications.map(notification => {
+                        const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                        const initials = notification.from ? notification.from.substring(0, 2).toUpperCase() : 'AD';
+                        const unreadClass = !notification.read ? 'unread' : '';
+                        
+                        return `<div class="notification-item ${unreadClass}" data-id="${notification.id}">
+                            <div class="notification-icon-small">${initials}</div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notification.title}</div>
+                                <div class="notification-message">${notification.message}</div>
+                                <div class="notification-time">${timeAgo}</div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    
+                    notificationList.querySelectorAll('.notification-item').forEach(item => {
+                        item.addEventListener('click', function() {
+                            markNotificationAsRead(this.dataset.id);
+                        });
+                    });
+                }
+            }
+        }
+
+        function markNotificationAsRead(id) {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const notification = notifications.find(n => n.id === id);
+            if (notification && !notification.read) {
+                notification.read = true;
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                loadNotifications();
+            }
+        }
+
+        function clearAllNotifications() {
+            try {
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                const currentUser = JSON.parse(localStorage.getItem('currentUser')) || window.currentUser;
+                
+                if (!currentUser) {
+                    console.error('No current user found');
+                    return;
+                }
+                
+                // Remove all notifications that match the current user
+                const remaining = notifications.filter(n => {
+                    const matchesUser = n.targetRole === currentUser.role || 
+                                       n.targetRole === 'all' || 
+                                       (n.targetUser && n.targetUser === currentUser.name);
+                    
+                    // Keep notifications that don't match the current user
+                    return !matchesUser;
+                });
+                
+                localStorage.setItem('notifications', JSON.stringify(remaining));
+                
+                // Dispatch custom event for same-tab updates
+                window.dispatchEvent(new CustomEvent('notificationsUpdated'));
+                
+                // Reload notifications to update UI
+                if (typeof loadNotifications === 'function') {
+                    loadNotifications();
+                }
+            } catch (error) {
+                console.error('Error clearing notifications:', error);
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+            if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            return 'Just now';
+        }
+
+        // Profile Picture Function for Header Avatar
+        function loadProfilePicture() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            
+            const profilePic = localStorage.getItem('profilePicture_' + currentUser.id) || currentUser.profilePicture;
+            const headerAvatar = document.getElementById('headerUserAvatar');
+            
+            if (profilePic && headerAvatar) {
+                headerAvatar.style.backgroundImage = `url(${profilePic})`;
+                headerAvatar.style.backgroundSize = 'cover';
+                headerAvatar.style.backgroundPosition = 'center';
+                headerAvatar.textContent = '';
+            } else if (headerAvatar) {
+                // Use initials if no picture
+                const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
+                headerAvatar.style.backgroundImage = '';
+                headerAvatar.textContent = initials;
+            }
+        }
+
+        // Initialize on page load
+        // Search functionality
+        function performTeamLeaderSearch(searchTerm) {
+            const taskCards = document.querySelectorAll('.task-card');
+            const teamRows = document.querySelectorAll('tr, .workload-row');
+            let hasMatches = false;
+            
+            document.querySelectorAll('.no-results-message').forEach(msg => msg.remove());
+            
+            if (!searchTerm) {
+                taskCards.forEach(card => card.style.display = '');
+                teamRows.forEach(row => row.style.display = '');
+                return;
+            }
+            
+            taskCards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                const matches = cardText.includes(searchTerm);
+                card.style.display = matches ? '' : 'none';
+                if (matches) hasMatches = true;
+            });
+            
+            teamRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const matches = rowText.includes(searchTerm);
+                row.style.display = matches ? '' : 'none';
+                if (matches) hasMatches = true;
+            });
+            
+            if (!hasMatches && searchTerm) {
+                const content = document.querySelector('.content, .dashboard-content');
+                if (content) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results-message';
+                    noResults.style.cssText = 'text-align: center; padding: 60px 20px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-top: 32px;';
+                    noResults.innerHTML = `
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 64px; height: 64px; color: #ccc; margin: 0 auto 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <h3 style="font-size: 18px; font-weight: 600; color: #666; margin-bottom: 8px;">No results found</h3>
+                        <p style="font-size: 14px; color: #999;">Try adjusting your search terms</p>
+                    `;
+                    content.appendChild(noResults);
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    performTeamLeaderSearch(searchTerm);
+                });
+            }
+            
+            // Load initial data
+            teams = JSON.parse(localStorage.getItem('teams')) || [];
+            projects = JSON.parse(localStorage.getItem('projects')) || [];
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            loadTeamWorkload();
+            
+            // Wait for Chart.js to be fully loaded before initializing
+            function tryInitializeChart() {
+                if (typeof Chart !== 'undefined') {
+                    initializeChart();
+                } else {
+                    setTimeout(tryInitializeChart, 100);
+                }
+            }
+            tryInitializeChart();
+            
+            loadApprovalQueue();
+            loadNotifications();
+            loadModalDropdowns();
+            
+            // Notification dropdown toggle
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const clearBtn = document.getElementById('clearAllNotifications');
+            
+            if (notificationIcon && notificationDropdown) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('show');
+                    loadNotifications();
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                        notificationDropdown.classList.remove('show');
+                    }
+                });
+            }
+            
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearAllNotifications();
+                });
+            }
+            
+            // Logout
+            const logoutBtn = document.querySelector('.sidebar-item.logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Do you want to logout?')) {
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+            
+            // User info click handler - navigate to settings
+            const userInfoClickable = document.getElementById('userInfoClickable');
+            if (userInfoClickable) {
+                userInfoClickable.addEventListener('click', function() {
+                    window.location.href = 'settingsleader.html';
+                });
+            }
+            
+            // Initialize profile picture on page load
+            loadProfilePicture();
+            
+            // Listen for storage changes
+            window.addEventListener('storage', function() {
+                teams = JSON.parse(localStorage.getItem('teams')) || [];
+                projects = JSON.parse(localStorage.getItem('projects')) || [];
+                tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                loadTeamWorkload();
+                loadApprovalQueue();
+                initializeChart();
+                loadNotifications();
+            });
+            
+            // Also refresh data periodically (every 2 seconds) to catch changes from same tab
+            setInterval(function() {
+                const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const currentProjects = JSON.parse(localStorage.getItem('projects')) || [];
+                const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+                
+                // Only refresh if data has changed
+                if (JSON.stringify(tasks) !== JSON.stringify(currentTasks) ||
+                    JSON.stringify(projects) !== JSON.stringify(currentProjects) ||
+                    JSON.stringify(teams) !== JSON.stringify(currentTeams)) {
+                    tasks = currentTasks;
+                    projects = currentProjects;
+                    teams = currentTeams;
+                    loadTeamWorkload();
+                    loadApprovalQueue();
+                    initializeChart();
+                }
+            }, 2000);
+        });
+    </script>
+    <!-- API Utility Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Admin Projects</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Dark Mode Styles */
+        .dark body {
+            background: #1a1a1a;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+        }
+        
+        .dark .sidebar {
+            background-color: #2d2d2d;
+            border-right-color: #404040;
+        }
+        
+        .dark .header {
+            background-color: #2d2d2d;
+            border-bottom-color: #404040;
+        }
+        
+        .dark .sidebar-item {
+            color: #b0b0b0;
+        }
+        
+        .dark .sidebar-item:hover {
+            background-color: #3a3a3a;
+        }
+        
+        .dark .sidebar-item.active {
+            background-color: #3a1a1a;
+            color: #e63946;
+        }
+        
+        .dark [style*="background: #fff"],
+        .dark [style*="background-color: #fff"] {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark [style*="color: #333"] {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark [style*="color: #666"] {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark [style*="border: 1px solid #e0e0e0"],
+        .dark [style*="border: 2px solid #e0e0e0"] {
+            border-color: #404040 !important;
+        }
+        
+        .dark input[type="text"],
+        .dark input[type="search"],
+        .dark select {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            color: #e63946;
+            background-color: #fff5f5;
+            border-left: 3px solid #e63946;
+        }
+
+        .sidebar-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-item.logout {
+            margin-top: auto;
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 16px 32px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00) 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #e63946;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15), 0 4px 12px rgba(230, 57, 70, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .search-bar svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-icon {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            color: #666;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .notification-icon:hover {
+            color: #e63946;
+            background-color: rgba(230, 57, 70, 0.1);
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: linear-gradient(135deg, #e63946 0%, #ff69b4 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 3px 7px;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 400px;
+            max-height: 550px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), 
+                            linear-gradient(135deg, rgba(230, 57, 70, 0.3), rgba(255, 105, 180, 0.3), rgba(186, 104, 200, 0.3));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-dropdown.show {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 18px 24px;
+            border-bottom: 2px solid rgba(230, 57, 70, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 245, 0.9));
+        }
+
+        .notification-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e63946 0%, #ff69b4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .notification-clear {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(255, 105, 180, 0.1));
+            border: none;
+            color: #e63946;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .notification-clear:hover {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.2), rgba(255, 105, 180, 0.2));
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2);
+        }
+
+        .notification-list {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #e63946, #ff69b4);
+            border-radius: 10px;
+        }
+
+        .notification-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(230, 57, 70, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 14px;
+            position: relative;
+        }
+
+        .notification-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #e63946, #ff69b4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification-item:hover {
+            background: linear-gradient(90deg, rgba(230, 57, 70, 0.05), rgba(255, 105, 180, 0.05));
+            padding-left: 28px;
+        }
+
+        .notification-item:hover::before {
+            opacity: 1;
+        }
+
+        .notification-item.unread {
+            background: linear-gradient(90deg, rgba(230, 57, 70, 0.08), rgba(255, 105, 180, 0.08));
+        }
+
+        .notification-item.unread::before {
+            opacity: 1;
+        }
+
+        .notification-icon-small {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #ff69b4 50%, #ba68c8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover .notification-icon-small {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .notification-empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .notification-empty::before {
+            content: '🔔';
+            display: block;
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(230, 57, 70, 0.1);
+        }
+        
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(230, 57, 70, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            background: linear-gradient(135deg, #333 0%, #666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+        
+        .user-role {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #ff69b4 50%, #ba68c8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+        }
+        
+        .user-info {
+            cursor: pointer;
+        }
+        
+        .user-info:hover .user-avatar {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+        }
+
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .content {
+            padding: 32px;
+        }
+        
+        .settings-content {
+            padding: 0;
+        }
+
+/* Cards & Components */
+.card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(230, 57, 70, 0.15);
+    border-color: rgba(230, 57, 70, 0.3);
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-title::before {
+    content: '';
+    width: 5px;
+    height: 24px;
+    background: linear-gradient(135deg, #e63946, #1976d2);
+    border-radius: 3px;
+}
+
+/* Progress Bars */
+.progress-bar-bg {
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+    border-radius: 9999px;
+    width: 100%;
+    overflow: hidden;
+    height: 14px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, #e63946 0%, #ff6b7a 50%, #e63946 100%);
+    background-size: 200% 100%;
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: shimmer-progress 2s infinite;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes shimmer-progress {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 5. Gantt Chart Timeline (UI Only) */
+.gantt-row {
+    display: grid;
+    grid-template-cols: 120px 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.gantt-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.gantt-track {
+    background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+    height: 36px;
+    border-radius: 10px;
+    width: 100%;
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.gantt-bar {
+    height: 100%;
+    border-radius: 8px;
+}
+
+.gantt-bar.done { 
+    background: linear-gradient(135deg, rgba(56, 142, 60, 0.3) 0%, rgba(76, 175, 80, 0.3) 100%); 
+    border: 2px solid #388e3c;
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.3);
+}
+
+.gantt-bar.active { 
+    background: linear-gradient(135deg, #e63946 0%, #ff6b7a 100%); 
+    box-shadow: 0 4px 16px rgba(230, 57, 70, 0.4);
+    animation: pulse-active 2s infinite;
+}
+
+.gantt-bar.upcoming { 
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%); 
+    border: 2px dashed #999;
+}
+
+@keyframes pulse-active {
+    0%, 100% { box-shadow: 0 4px 16px rgba(230, 57, 70, 0.4); }
+    50% { box-shadow: 0 6px 24px rgba(230, 57, 70, 0.6); }
+}
+
+/* 6. Milestones & Risk Alerts */
+.milestone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.milestone-item.complete { 
+    color: #2e7d32;
+    font-weight: 700;
+    position: relative;
+    padding-left: 24px;
+}
+
+.milestone-item.complete::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #388e3c;
+    font-weight: 900;
+    font-size: 18px;
+}
+
+.milestone-item.active { 
+    color: #e63946;
+    font-weight: 700;
+    position: relative;
+    padding-left: 24px;
+    animation: pulse-text 2s infinite;
+}
+
+.milestone-item.active::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #e63946;
+    font-weight: 900;
+    font-size: 18px;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-text {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+.badge-red { 
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    color: #c62828;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    border: 1px solid rgba(211, 47, 47, 0.3);
+    box-shadow: 0 2px 6px rgba(211, 47, 47, 0.2);
+    animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Project Files */
+.file-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    padding: 1.5rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid rgba(230, 57, 70, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.file-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e63946, #1976d2);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.file-card:hover {
+    border-color: #e63946;
+    transform: translateY(-6px) scale(1.02);
+    background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+    box-shadow: 0 8px 24px rgba(230, 57, 70, 0.2);
+}
+
+.file-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Utility Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #666;
+    border: 2px solid #e0e0e0;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.btn-secondary:hover {
+    border-color: #e63946;
+    color: #e63946;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.meta-item .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.meta-item .value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-box {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00);
+}
+
+.modal-header {
+    padding: 24px 28px;
+    border-bottom: 2px solid rgba(230, 57, 70, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.05) 0%, rgba(25, 118, 210, 0.05) 100%);
+}
+
+.modal-header h3 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-header button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #e63946;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1), 0 4px 12px rgba(230, 57, 70, 0.15);
+    transform: translateY(-1px);
+}
+
+.input-field:hover {
+    border-color: rgba(230, 57, 70, 0.5);
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.members-checkbox-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.member-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.member-checkbox-item:hover {
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(25, 118, 210, 0.1) 100%);
+    transform: translateX(4px);
+}
+
+.member-checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #e63946;
+}
+
+.timeline-container {
+    margin-top: 1rem;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+}
+
+.dark .menu-toggle {
+    color: #e0e0e0;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .search-bar {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .page-title {
+        font-size: 20px;
+        min-width: auto;
+    }
+    
+    .search-bar {
+        max-width: 100%;
+        order: 3;
+        width: 100%;
+        margin-top: 12px;
+    }
+    
+    .header-right {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .header-right button {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+    
+    .content {
+        padding: 20px 16px;
+    }
+    
+    .modal-box {
+        max-width: 95% !important;
+        margin: 1rem;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .user-info {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 12px;
+    }
+    
+    .page-title {
+        font-size: 18px;
+    }
+    
+    .search-bar input {
+        padding: 10px 14px 10px 40px;
+        font-size: 14px;
+    }
+    
+    .header-right button {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .modal-header {
+        padding: 16px;
+    }
+    
+    .modal-header h3 {
+        font-size: 18px;
+    }
+    
+    .input-field {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text"><img src="img/bg removed.png" alt="Graphura"></div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="admin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryadmin.html" class="sidebar-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="createadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Create</span>
+                </a>
+                <a href="billing.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Billing & Reports</span>
+                </a>
+                <a href="teamadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Leaders</span>
+                </a>
+                <a href="calendaradmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                </a>
+                <a href="settingsadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="header-left">
+                    <h2 style="font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #e63946 0%, #1976d2 50%, #388e3c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; margin: 0; min-width: 200px;" id="pageTitle">Projects Overview</h2>
+                    <div class="search-bar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search projects...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div style="display: flex; gap: 12px;" id="headerActions">
+                        <!-- Admin can only view projects, not create them here. Use Create page for that. -->
+                        <button class="btn-secondary" id="exportPDFBtn" style="display: none;">Export PDF</button>
+                        <button class="btn-primary" id="shareReportBtn" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                            </svg>
+                            <span>Share Report</span>
+                        </button>
+                    </div>
+                    <div class="notification-container">
+                        <svg class="notification-icon" id="notificationIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="notification-clear" id="clearAllNotifications">Clear all</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-details">
+                            <div class="user-name" id="headerUserName">Admin</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                        <div class="user-avatar" id="headerUserAvatar">AD</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Wrapper -->
+                <div class="content-wrapper">
+                <div class="content" id="dashboardContent">
+                    <!-- Projects List View -->
+                    <div id="projectsListContainer">
+                        <!-- Projects will be loaded dynamically -->
+                    </div>
+                    
+                    <!-- Project Detail View -->
+                    <div id="projectDetailContainer" style="display: none;">
+                        <!-- Project details will be loaded dynamically -->
+                    </div>
+                </div>
+
+            <!-- Admin can only view projects here. To create projects, go to Create page. -->
+
+    <script>
+        // Load and apply settings (dark mode, etc.)
+        function loadSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            const role = currentUser.role;
+            const settingsKey = 'settings_' + role;
+            const settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+            if (settings.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        loadSettings();
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith('settings_')) loadSettings();
+        });
+        window.addEventListener('settingsUpdated', loadSettings);
+        
+// project-summary.js
+let currentProjectId = null;
+
+function loadProjects() {
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const teams = JSON.parse(localStorage.getItem('teams')) || [];
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const projectsListContainer = document.getElementById('projectsListContainer');
+    const pageTitle = document.getElementById('pageTitle');
+    const exportPDFBtn = document.getElementById('exportPDFBtn');
+    const shareReportBtn = document.getElementById('shareReportBtn');
+    
+    if (!projectsListContainer) return;
+    
+    // Update page title
+    if (pageTitle) {
+        pageTitle.textContent = 'Projects Overview';
+    }
+    
+    // Hide action buttons on list view
+    if (exportPDFBtn) exportPDFBtn.style.display = 'none';
+    if (shareReportBtn) shareReportBtn.style.display = 'none';
+    
+    if (projects.length === 0) {
+        projectsListContainer.innerHTML = `
+            <div class="card" style="text-align: center; padding: 48px;">
+                <h2 style="font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #666 0%, #999 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px;">No Projects Yet</h2>
+                <p style="color: #999;">Projects will appear here once they are created.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Admin sees all projects
+    const visibleProjects = projects;
+    const pageTitleText = 'All Projects';
+    
+    projectsListContainer.innerHTML = `
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #e63946 0%, #1976d2 50%, #388e3c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; letter-spacing: -0.5px;">${pageTitleText}</h1>
+            <p style="color: #666; font-size: 16px;">${visibleProjects.length} project${visibleProjects.length !== 1 ? 's' : ''} in total</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+            ${visibleProjects.map(project => {
+                const projectTasks = tasks.filter(t => t.projectId === project.id);
+                const completedTasks = projectTasks.filter(t => t.status === 'Completed').length;
+                const progress = projectTasks.length > 0 ? Math.round((completedTasks / projectTasks.length) * 100) : 0;
+                const domain = project.domain || 'Not specified';
+                const leader = project.leader ? project.leader : null;
+                
+                return `
+                    <div class="card" style="cursor: pointer;" onclick="showProjectDetail(${project.id})">
+                        <h3 style="font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #e63946 0%, #1976d2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px;">${project.name || 'Unnamed Project'}</h3>
+                        <p style="color: #666; margin-bottom: 16px; font-size: 14px;">${project.description || 'No description'}</p>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 12px; color: #666; font-weight: 600;">Progress</span>
+                                <span style="font-size: 14px; font-weight: 600; color: #e63946;">${progress}%</span>
+                            </div>
+                            <div class="progress-bar-bg" style="height: 8px;">
+                                <div class="progress-bar-fill" style="width: ${progress}%;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #999; margin-bottom: 12px;">
+                            <span>Domain: ${domain}</span>
+                            <span>${projectTasks.length} task${projectTasks.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        ${leader ? `<div style="font-size: 12px; color: #666; margin-bottom: 12px;">Lead: ${leader}</div>` : ''}
+                        ${project.createdAt ? `<div style="font-size: 12px; color: #999; margin-bottom: 12px;">Created: ${new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>` : ''}
+                        <div style="padding-top: 12px; border-top: 2px solid rgba(230, 57, 70, 0.1);">
+                            <span style="display: inline-block; padding: 6px 14px; background: ${project.status === 'Active' ? 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)' : project.status === 'Completed' ? 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)' : 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)'}; color: ${project.status === 'Active' ? '#2e7d32' : project.status === 'Completed' ? '#1565c0' : '#e65100'}; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid ${project.status === 'Active' ? 'rgba(56, 142, 60, 0.3)' : project.status === 'Completed' ? 'rgba(25, 118, 210, 0.3)' : 'rgba(245, 124, 0, 0.3)'}; box-shadow: 0 2px 6px ${project.status === 'Active' ? 'rgba(56, 142, 60, 0.2)' : project.status === 'Completed' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(245, 124, 0, 0.2)'};">${project.status || 'Active'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function showProjectDetail(projectId) {
+    currentProjectId = projectId;
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const teams = JSON.parse(localStorage.getItem('teams')) || [];
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const project = projects.find(p => p.id === projectId);
+    
+    if (!project) return;
+    
+    const projectTasks = tasks.filter(t => t.projectId === projectId);
+    const completedTasks = projectTasks.filter(t => t.status === 'Completed').length;
+    const inProgressTasks = projectTasks.filter(t => t.status === 'In Progress').length;
+    const pendingTasks = projectTasks.filter(t => t.status === 'Pending').length;
+    const progress = projectTasks.length > 0 ? Math.round((completedTasks / projectTasks.length) * 100) : 0;
+    const domain = project.domain || 'Not specified';
+    const leader = project.leader || null;
+    
+    const projectsListContainer = document.getElementById('projectsListContainer');
+    const projectDetailContainer = document.getElementById('projectDetailContainer');
+    const pageTitle = document.getElementById('pageTitle');
+    const exportPDFBtn = document.getElementById('exportPDFBtn');
+    const shareReportBtn = document.getElementById('shareReportBtn');
+    
+    if (projectsListContainer) projectsListContainer.style.display = 'none';
+    if (pageTitle) pageTitle.textContent = project.name || 'Project Details';
+    if (exportPDFBtn) exportPDFBtn.style.display = 'inline-flex';
+    if (shareReportBtn) shareReportBtn.style.display = 'inline-flex';
+    
+    if (projectDetailContainer) {
+        projectDetailContainer.style.display = 'block';
+        projectDetailContainer.innerHTML = `
+            <div style="margin-bottom: 24px;">
+                <button onclick="showProjectsList()" style="padding: 12px 20px; background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.05) 100%); border: 2px solid rgba(230, 57, 70, 0.3); border-radius: 10px; cursor: pointer; margin-bottom: 16px; font-size: 14px; font-weight: 600; color: #e63946; transition: all 0.3s ease;" onmouseover="this.style.background='linear-gradient(135deg, #e63946 0%, #d62828 100%)'; this.style.color='white'; this.style.transform='translateX(-4px)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.05) 100%)'; this.style.color='#e63946'; this.style.transform='translateX(0)';">← Back to Projects</button>
+            </div>
+                    <div class="card">
+                <div style="display: flex; flex-direction: column; md:flex-direction: row; justify-content: space-between; gap: 24px; margin-bottom: 24px;">
+                    <div style="flex: 1;">
+                        <h1 style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #e63946 0%, #1976d2 50%, #388e3c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; letter-spacing: -0.5px;">${project.name || 'Unnamed Project'}</h1>
+                        <p style="color: #666; font-size: 16px; margin-bottom: 16px;">${project.description || 'No description'}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Progress</span>
+                        <h2 style="font-size: 52px; font-weight: 800; background: linear-gradient(135deg, #e63946 0%, #ff6b7a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">${progress}%</h2>
+                    </div>
+                </div>
+                <div class="progress-bar-bg" style="height: 12px; margin-bottom: 24px;">
+                    <div class="progress-bar-fill" style="width: ${progress}%;"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding-top: 24px; border-top: 1px solid #e0e0e0;">
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Domain</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${domain}</p>
+                    </div>
+                    ${leader ? `
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Lead</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${leader}</p>
+                    </div>
+                    ` : ''}
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Status</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${project.status || 'Active'}</p>
+                                </div>
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Total Tasks</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${projectTasks.length}</p>
+                            </div>
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Completed</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${completedTasks}</p>
+                            </div>
+                    ${project.createdAt ? `
+                    <div>
+                        <span style="font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase;">Created</span>
+                        <p style="font-size: 16px; color: #333; margin-top: 4px; font-weight: 500;">${new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    </div>
+                    ` : ''}
+                        </div>
+                    </div>
+
+                        <div class="card">
+                <h3 class="card-title">Task Overview</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div style="text-align: center; padding: 28px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 12px; border: 2px solid rgba(245, 124, 0, 0.2); box-shadow: 0 4px 12px rgba(245, 124, 0, 0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 6px 20px rgba(245, 124, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(245, 124, 0, 0.15)'">
+                        <div style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #f57c00 0%, #ffb74d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px;">${pendingTasks}</div>
+                        <div style="font-size: 14px; color: #e65100; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Pending</div>
+                                </div>
+                    <div style="text-align: center; padding: 28px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 12px; border: 2px solid rgba(25, 118, 210, 0.2); box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 6px 20px rgba(25, 118, 210, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(25, 118, 210, 0.15)'">
+                        <div style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px;">${inProgressTasks}</div>
+                        <div style="font-size: 14px; color: #1565c0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">In Progress</div>
+                                </div>
+                    <div style="text-align: center; padding: 28px; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; border: 2px solid rgba(56, 142, 60, 0.2); box-shadow: 0 4px 12px rgba(56, 142, 60, 0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 6px 20px rgba(56, 142, 60, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(56, 142, 60, 0.15)'">
+                        <div style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px;">${completedTasks}</div>
+                        <div style="font-size: 14px; color: #2e7d32; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Completed</div>
+                </div>
+        </div>
+    </div>
+
+            ${projectTasks.length > 0 ? `
+                    <div class="card">
+                <h3 class="card-title">Project Tasks</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${projectTasks.map(task => {
+                        const assignee = task.assigneeId ? users.find(u => u.id === task.assigneeId) : null;
+                        const statusColors = {
+                            'Pending': { bg: '#fff3e0', color: '#f57c00' },
+                            'In Progress': { bg: '#e3f2fd', color: '#1976d2' },
+                            'Completed': { bg: '#e8f5e9', color: '#388e3c' }
+                        };
+                        const statusColor = statusColors[task.status] || statusColors['Pending'];
+                        return `
+                            <div style="padding: 18px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 12px; border-left: 5px solid ${statusColor.color}; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                    <h4 style="font-size: 17px; font-weight: 700; color: #333; margin: 0;">${task.title || 'Untitled Task'}</h4>
+                                    <span style="padding: 6px 14px; background: ${statusColor.bg === '#fff3e0' ? 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)' : statusColor.bg === '#e3f2fd' ? 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)' : 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)'}; color: ${statusColor.color}; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid ${statusColor.color === '#f57c00' ? 'rgba(245, 124, 0, 0.3)' : statusColor.color === '#1976d2' ? 'rgba(25, 118, 210, 0.3)' : 'rgba(56, 142, 60, 0.3)'}; box-shadow: 0 2px 6px ${statusColor.color === '#f57c00' ? 'rgba(245, 124, 0, 0.2)' : statusColor.color === '#1976d2' ? 'rgba(25, 118, 210, 0.2)' : 'rgba(56, 142, 60, 0.2)'};">${task.status || 'Pending'}</span>
+                            </div>
+                                ${task.description ? `<p style="font-size: 14px; color: #666; margin-bottom: 8px;">${task.description}</p>` : ''}
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #999;">
+                                    ${assignee ? `<span>Assigned to: ${assignee.name}</span>` : '<span>Unassigned</span>'}
+                                    ${task.dueDate ? `<span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>` : ''}
+                            </div>
+                        </div>
+                        `;
+                    }).join('')}
+                    </div>
+                </div>
+            ` : ''}
+        `;
+    }
+}
+
+function showProjectsList() {
+    currentProjectId = null;
+    const projectsListContainer = document.getElementById('projectsListContainer');
+    const projectDetailContainer = document.getElementById('projectDetailContainer');
+    const pageTitle = document.getElementById('pageTitle');
+    const exportPDFBtn = document.getElementById('exportPDFBtn');
+    const shareReportBtn = document.getElementById('shareReportBtn');
+    
+    if (projectsListContainer) projectsListContainer.style.display = 'block';
+    if (projectDetailContainer) projectDetailContainer.style.display = 'none';
+    if (pageTitle) pageTitle.textContent = 'Projects Overview';
+    if (exportPDFBtn) exportPDFBtn.style.display = 'none';
+    if (shareReportBtn) shareReportBtn.style.display = 'none';
+    
+    loadProjects();
+}
+
+function exportProjectsPDF() {
+    if (!currentProjectId) {
+        alert('Please select a project to export.');
+        return;
+    }
+    
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const teams = JSON.parse(localStorage.getItem('teams')) || [];
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    const project = projects.find(p => p.id == currentProjectId);
+    if (!project) {
+        alert('Project not found.');
+        return;
+    }
+    
+    const projectTasks = tasks.filter(t => t.projectId == project.id);
+    const completedTasks = projectTasks.filter(t => t.status === 'Completed').length;
+    const pendingTasks = projectTasks.filter(t => t.status === 'Pending').length;
+    const inProgressTasks = projectTasks.filter(t => t.status === 'In Progress').length;
+    const progress = projectTasks.length > 0 ? Math.round((completedTasks / projectTasks.length) * 100) : 0;
+    const domain = project.domain || 'Not specified';
+    
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Title
+        doc.setFontSize(20);
+        doc.setTextColor(230, 57, 70);
+        doc.text('Project Report', 20, 20);
+        
+        // Project Name
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text(project.name || 'Unnamed Project', 20, 35);
+        
+        let yPos = 45;
+        
+        // Project Details
+        doc.setFontSize(12);
+        doc.text(`Description: ${project.description || 'No description'}`, 20, yPos);
+        yPos += 10;
+        doc.text(`Status: ${project.status || 'Active'}`, 20, yPos);
+        yPos += 10;
+        doc.text(`Progress: ${progress}%`, 20, yPos);
+        yPos += 10;
+        doc.text(`Domain: ${domain}`, 20, yPos);
+        yPos += 10;
+        if (project.leader) {
+            doc.text(`Leader: ${project.leader}`, 20, yPos);
+            yPos += 10;
+        }
+        if (project.createdAt) {
+            doc.text(`Created: ${new Date(project.createdAt).toLocaleDateString()}`, 20, yPos);
+            yPos += 10;
+        }
+        yPos += 5;
+        
+        // Task Overview
+        doc.setFontSize(14);
+        doc.setTextColor(230, 57, 70);
+        doc.text('Task Overview', 20, yPos);
+        yPos += 10;
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Total Tasks: ${projectTasks.length}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Pending: ${pendingTasks}`, 20, yPos);
+        yPos += 8;
+        doc.text(`In Progress: ${inProgressTasks}`, 20, yPos);
+        yPos += 8;
+        doc.text(`Completed: ${completedTasks}`, 20, yPos);
+        yPos += 10;
+        
+        // Tasks List
+        if (projectTasks.length > 0) {
+            doc.setFontSize(14);
+            doc.setTextColor(230, 57, 70);
+            doc.text('Tasks', 20, yPos);
+            yPos += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            
+            projectTasks.forEach((task, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                doc.text(`${index + 1}. ${task.title || 'Untitled Task'}`, 25, yPos);
+                yPos += 7;
+                doc.text(`   Status: ${task.status || 'Pending'}`, 25, yPos);
+                yPos += 7;
+                if (task.assignedTo) {
+                    doc.text(`   Assigned to: ${task.assignedTo}`, 25, yPos);
+                    yPos += 7;
+                }
+                if (task.dueDate) {
+                    doc.text(`   Due: ${new Date(task.dueDate).toLocaleDateString()}`, 25, yPos);
+                    yPos += 7;
+                }
+                yPos += 5;
+            });
+        }
+        
+        // Footer
+        const pageCount = doc.internal.pages.length - 1;
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Generated on ${new Date().toLocaleString()} - Page ${i} of ${pageCount}`, 20, doc.internal.pageSize.height - 10);
+        }
+        
+        // Save PDF
+        doc.save(`Project_${project.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF. Please try again.');
+    }
+}
+
+function shareProjectsReport() {
+    if (!currentProjectId) {
+        alert('Please select a project to share.');
+        return;
+    }
+    if (navigator.share) {
+        const projects = JSON.parse(localStorage.getItem('projects')) || [];
+        const project = projects.find(p => p.id === currentProjectId);
+        navigator.share({
+            title: 'Project Report',
+            text: `Project Report: ${project ? project.name : 'Project'}`,
+            url: window.location.href
+        }).catch(err => console.log('Error sharing', err));
+    } else {
+        // Fallback: copy link to clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(() => {
+            alert('Share functionality is not available in this browser.');
+        });
+    }
+}
+
+// Project creation is handled in createadmin.html, not here
+// Admin can only view and manage projects on this page
+
+// Notification system functions
+function loadNotifications() {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (!currentUser) return;
+    
+    const userNotifications = currentUser.role === 'admin' 
+        ? notifications
+        : notifications.filter(n => n.targetRole === currentUser.role || n.targetRole === 'all' || (n.targetUser && n.targetUser === currentUser.name));
+    
+    userNotifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    const unreadCount = userNotifications.filter(n => !n.read).length;
+    const badge = document.getElementById('notificationBadge');
+    const notificationList = document.getElementById('notificationList');
+    
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.classList.add('show');
+        } else {
+            badge.classList.remove('show');
+        }
+    }
+    
+    if (notificationList) {
+        if (userNotifications.length === 0) {
+            notificationList.innerHTML = `
+                <div class="notification-empty">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <p>No notifications</p>
+                </div>
+            `;
+        } else {
+            notificationList.innerHTML = userNotifications.map(notification => {
+                const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                const initials = notification.from ? notification.from.substring(0, 2).toUpperCase() : 'AD';
+                const unreadClass = !notification.read ? 'unread' : '';
+                
+                return `
+                    <div class="notification-item ${unreadClass}" data-id="${notification.id}">
+                        <div class="notification-icon-small">${initials}</div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notification.title}</div>
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            notificationList.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    markNotificationAsRead(id);
+                });
+            });
+        }
+    }
+}
+
+function markNotificationAsRead(id) {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const notification = notifications.find(n => n.id === id);
+    if (notification && !notification.read) {
+        notification.read = true;
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        loadNotifications();
+    }
+}
+
+function clearAllNotifications() {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Filter out notifications that match the current user
+    const remaining = notifications.filter(n => {
+        const matchesUser = n.targetRole === currentUser.role || 
+                           n.targetRole === 'all' || 
+                           (n.targetUser && n.targetUser === currentUser.name);
+        
+        // Keep notifications that don't match the current user
+        return !matchesUser;
+    });
+    
+    localStorage.setItem('notifications', JSON.stringify(remaining));
+    
+    // Dispatch custom event for same-tab updates
+    window.dispatchEvent(new CustomEvent('notificationsUpdated'));
+    
+    loadNotifications();
+}
+
+function getTimeAgo(date) {
+    const now = new Date();
+    const diff = now - date;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    return 'Just now';
+}
+
+// Check for tasks with deadlines within 24 hours and create notifications
+function checkDeadlineNotifications() {
+    try {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        if (!tasks || tasks.length === 0) return;
+        
+        const now = new Date();
+        const twentyFourHoursLater = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+        
+        tasks.forEach(task => {
+            // Skip if task is completed or has no due date
+            if (!task.dueDate || task.status === 'Completed') return;
+            
+            const dueDate = new Date(task.dueDate);
+            
+            // Check if deadline is within 24 hours (between now and 24 hours from now)
+            if (dueDate > now && dueDate <= twentyFourHoursLater) {
+                // Calculate hours until deadline
+                const hoursUntilDeadline = Math.floor((dueDate - now) / (1000 * 60 * 60));
+                
+                // Determine who should receive the notification
+                let targetRole = null;
+                let targetUser = null;
+                
+                if (task.assignedTo) {
+                    // Find the assigned user
+                    const assignedUser = users.find(u => 
+                        u.name === task.assignedTo || 
+                        u.email === task.assignedTo ||
+                        u.id === task.assignedTo
+                    );
+                    
+                    if (assignedUser) {
+                        targetUser = assignedUser.name;
+                        targetRole = assignedUser.role;
+                    } else {
+                        // If assigned user not found, try to match by name
+                        targetUser = task.assignedTo;
+                    }
+                }
+                
+                // Check if notification already exists for this task deadline
+                const notificationExists = notifications.some(n => 
+                    n.type === 'deadline' && 
+                    n.taskId === task.id &&
+                    n.deadlineDate === task.dueDate &&
+                    ((targetUser && n.targetUser === targetUser) || 
+                     (targetRole && n.targetRole === targetRole))
+                );
+                
+                if (!notificationExists) {
+                    const hoursText = hoursUntilDeadline === 0 ? 'less than an hour' : 
+                                    hoursUntilDeadline === 1 ? '1 hour' : 
+                                    `${hoursUntilDeadline} hours`;
+                    
+                    const newNotification = {
+                        id: Date.now() + Math.random().toString(36).substr(2, 9),
+                        type: 'deadline',
+                        taskId: task.id,
+                        deadlineDate: task.dueDate,
+                        title: 'Deadline Approaching',
+                        message: `Task "${task.title || 'Untitled Task'}" is due in ${hoursText}.`,
+                        from: 'System',
+                        targetRole: targetRole,
+                        targetUser: targetUser,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    };
+                    
+                    notifications.push(newNotification);
+                }
+            }
+        });
+        
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        
+        // Reload notifications if function exists
+        if (typeof loadNotifications === 'function') {
+            loadNotifications();
+        }
+    } catch (error) {
+        console.error('Error checking deadline notifications:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Admin authentication check
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+    }
+    if (currentUser.role !== 'admin') {
+        alert('Access denied. Admin privileges required.');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Add click handler to redirect to settings page
+    const userInfoEl = document.querySelector('.user-info');
+    if (userInfoEl) {
+        userInfoEl.addEventListener('click', function() {
+            window.location.href = 'settingsadmin.html';
+        });
+    }
+    
+    // Update header user info
+    function getInitials(name) {
+        if (!name) return 'AD';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
+    
+    const headerUserName = document.getElementById('headerUserName');
+    const headerUserAvatar = document.getElementById('headerUserAvatar');
+    if (headerUserName && currentUser.name) {
+        headerUserName.textContent = currentUser.name;
+    }
+    if (headerUserAvatar && currentUser.name) {
+        headerUserAvatar.textContent = getInitials(currentUser.name);
+    }
+    
+    // Check if we should show a specific project detail (from breadcrumb navigation)
+    const selectedProjectId = localStorage.getItem('selectedProjectId');
+    const showProjectDetail = localStorage.getItem('showProjectDetail');
+    if (selectedProjectId && showProjectDetail === 'true') {
+        // Clear the flag
+        localStorage.removeItem('showProjectDetail');
+        // Show project detail after a short delay to ensure page is loaded
+        setTimeout(() => {
+            showProjectDetail(selectedProjectId);
+        }, 100);
+    }
+    
+    console.log("Admin Project Summary Page Loaded Successfully.");
+    
+    // Load and display projects
+    loadProjects();
+    
+    // Admin should use createadmin.html to create projects, not here
+    // Remove project creation from this page
+    
+    // Export PDF button
+    const exportPDFBtn = document.getElementById('exportPDFBtn');
+    if (exportPDFBtn) {
+        exportPDFBtn.addEventListener('click', exportProjectsPDF);
+    }
+    
+    // Share Report button
+    const shareReportBtn = document.getElementById('shareReportBtn');
+    if (shareReportBtn) {
+        shareReportBtn.addEventListener('click', shareProjectsReport);
+    }
+    
+    // Setup search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const projectCards = document.querySelectorAll('.project-card, .card');
+            
+            if (!searchTerm) {
+                projectCards.forEach(card => card.style.display = '');
+                return;
+            }
+            
+            projectCards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                const matches = cardText.includes(searchTerm);
+                card.style.display = matches ? '' : 'none';
+            });
+        });
+    }
+    
+    // Initialize notifications
+    loadNotifications();
+    
+    const notificationIcon = document.getElementById('notificationIcon');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const clearBtn = document.getElementById('clearAllNotifications');
+    
+    if (notificationIcon && notificationDropdown) {
+        notificationIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+            loadNotifications(); // Refresh when opening
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.remove('show');
+            }
+        });
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearAllNotifications();
+        });
+    }
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'notifications' || !e.key) {
+            loadNotifications();
+        }
+    });
+    
+    // Listen for custom event for same-tab updates
+    window.addEventListener('notificationsUpdated', function() {
+        loadNotifications();
+    });
+    
+    // Check for deadline notifications on page load
+    checkDeadlineNotifications();
+    
+    // Check for deadline notifications every hour
+    setInterval(checkDeadlineNotifications, 60 * 60 * 1000);
+    
+    // Listen for storage changes to update in real-time
+    window.addEventListener('storage', function() {
+        if (!currentProjectId) {
+            loadProjects();
+        } else {
+            showProjectDetail(currentProjectId);
+        }
+    });
+    
+    // Also refresh on focus in case data changed in same tab
+    window.addEventListener('focus', function() {
+        if (!currentProjectId) {
+            loadProjects();
+        } else {
+            showProjectDetail(currentProjectId);
+        }
+    });
+    
+    // Periodic refresh every 5 seconds
+    setInterval(function() {
+        if (!currentProjectId) {
+            loadProjects();
+        } else {
+            showProjectDetail(currentProjectId);
+        }
+    }, 5000);
+    
+    // Logout functionality
+    const logoutBtn = document.querySelector('.sidebar-item.logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Do you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        });
+    }
+    
+    // Mobile menu toggle
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('open');
+        }
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        const sidebar = document.querySelector('.sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        if (window.innerWidth <= 768 && sidebar && menuToggle) {
+            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        }
+    });
+
+    // Check user role and show/hide admin-only navigation items
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const billingLink = document.getElementById('billingLink');
+        
+        // Show billing button (always visible for admins)
+        if (billingLink) {
+            billingLink.style.display = 'flex';
+        }
+    });
+    
+});
+    </script>
+</body>
+</html>

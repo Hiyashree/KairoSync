@@ -1,0 +1,2665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Team Management</title>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Dark Mode Styles */
+.dark body {
+    background: #1a1a1a;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+.dark body::before {
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+}
+
+.dark .sidebar {
+    background-color: #2d2d2d;
+    border-right-color: #404040;
+}
+
+.dark .header {
+    background-color: #2d2d2d;
+    border-bottom-color: #404040;
+}
+
+.dark .sidebar-item {
+    color: #b0b0b0;
+}
+
+.dark .sidebar-item:hover {
+    background-color: #3a3a3a;
+}
+
+.dark .sidebar-item.active {
+    background-color: #3a1a1a;
+    color: #e63946;
+}
+
+.dark [style*="background: #fff"],
+.dark [style*="background-color: #fff"] {
+    background-color: #2d2d2d !important;
+}
+
+.dark [style*="color: #333"] {
+    color: #e0e0e0 !important;
+}
+
+.dark [style*="color: #666"] {
+    color: #b0b0b0 !important;
+}
+
+.dark [style*="border: 1px solid #e0e0e0"],
+.dark [style*="border: 2px solid #e0e0e0"] {
+    border-color: #404040 !important;
+}
+
+        .dark input[type="text"],
+.dark input[type="search"],
+.dark select {
+    background-color: #3a3a3a !important;
+    color: #e0e0e0 !important;
+    border-color: #404040 !important;
+}
+
+.dark .leader-card {
+    background: linear-gradient(135deg, #2d2d2d 0%, #252525 100%) !important;
+    border-color: #404040 !important;
+}
+
+.dark .leader-card-header {
+    border-bottom-color: #404040 !important;
+}
+
+.dark .leader-name {
+    color: #e0e0e0 !important;
+}
+
+.dark .leader-domain {
+    color: #b0b0b0 !important;
+}
+
+.dark .leader-detail-item {
+    background: rgba(230, 57, 70, 0.1) !important;
+}
+
+.dark .leader-detail-text {
+    color: #e0e0e0 !important;
+}
+
+.dark .leader-detail-label {
+    color: #999 !important;
+}
+
+.dark .leader-detail-value {
+    color: #e0e0e0 !important;
+}
+
+.dark .leader-contact {
+    border-top-color: #404040 !important;
+}
+
+.dark .leader-stats {
+    border-top-color: #404040 !important;
+}
+
+.dark .leader-stat {
+    background: rgba(230, 57, 70, 0.1) !important;
+}
+
+.dark .leader-stat-value {
+    color: #e63946 !important;
+}
+
+.dark .leader-stat-label {
+    color: #999 !important;
+}
+
+.dark .no-leaders {
+    background: linear-gradient(135deg, #2d2d2d 0%, #252525 100%) !important;
+}
+
+.dark .no-leaders h3 {
+    color: #e0e0e0 !important;
+}
+
+.dark .no-leaders p {
+    color: #b0b0b0 !important;
+}
+
+        .container {
+  display: flex;
+            min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+  align-items: center;
+  gap: 10px;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+  cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            color: #e63946;
+            background-color: #fff5f5;
+            border-left: 3px solid #e63946;
+        }
+
+        .sidebar-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-item.logout {
+            margin-top: auto;
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 50%, #388e3c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 120px;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #e63946;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .search-bar svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+  cursor: pointer;
+            color: #666;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background-color: #e63946;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .notification-dropdown.show {
+    display: flex;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .notification-clear {
+            background: none;
+    border: none;
+            color: #e63946;
+    font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 4px 8px;
+        }
+
+        .notification-clear:hover {
+            text-decoration: underline;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #fff5f5;
+        }
+
+        .notification-item.unread:hover {
+            background-color: #ffebee;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+  color: white;
+            font-weight: 600;
+            font-size: 16px;
+}
+
+        .notification-content {
+  flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .notification-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .notification-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .user-info {
+  display: flex;
+  align-items: center;
+            gap: 12px;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            cursor: pointer;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        .settings-content {
+            padding: 0;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .page-title-gradient {
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 30%, #388e3c 60%, #f57c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .title-highlight {
+            background: linear-gradient(135deg, #f57c00 0%, #e63946 50%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: colorShift 3s ease-in-out infinite;
+        }
+
+        @keyframes colorShift {
+            0%, 100% {
+                filter: hue-rotate(0deg);
+            }
+            50% {
+                filter: hue-rotate(20deg);
+            }
+        }
+
+        .page-description-gradient {
+            color: #666;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .text-highlight {
+            background: linear-gradient(135deg, #e63946, #c1121f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .text-highlight-2 {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .text-highlight-3 {
+            background: linear-gradient(135deg, #388e3c, #2e7d32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .page-header p,
+        .page-description {
+            color: #666;
+            font-size: 16px;
+}
+
+/* Cards */
+.cards {
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.leader-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.leader-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.leader-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(230, 57, 70, 0.15);
+  border-color: #e63946;
+}
+
+.leader-card:hover::before {
+  opacity: 1;
+}
+
+.leader-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.leader-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.leader-avatar::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.leader-info {
+  flex: 1;
+}
+
+.leader-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leader-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #e63946, #c1121f);
+  color: white;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(230, 57, 70, 0.3);
+}
+
+.leader-badge-gradient {
+  background: linear-gradient(135deg, #e63946 0%, #1976d2 50%, #388e3c 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  box-shadow: 0 2px 12px rgba(230, 57, 70, 0.4);
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.leader-domain {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leader-domain-icon {
+  width: 16px;
+  height: 16px;
+  color: #e63946;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.domain-text-gradient {
+  background: linear-gradient(135deg, #1976d2, #388e3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+.leader-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.leader-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(230, 57, 70, 0.05);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.leader-detail-item:hover {
+  background: rgba(230, 57, 70, 0.1);
+  transform: translateX(4px);
+}
+
+.leader-detail-icon {
+  width: 20px;
+  height: 20px;
+  color: #e63946;
+  flex-shrink: 0;
+}
+
+.leader-detail-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.leader-detail-label {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.leader-detail-value {
+  font-weight: 600;
+  color: #333;
+  word-break: break-word;
+}
+
+.leader-contact {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.leader-contact-button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #e63946, #c1121f);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
+.leader-contact-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+}
+
+.leader-contact-button:active {
+  transform: translateY(0);
+}
+
+.leader-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.leader-stat {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  background: rgba(230, 57, 70, 0.05);
+  border-radius: 10px;
+}
+
+.leader-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e63946;
+  margin-bottom: 4px;
+}
+
+.leader-stat-label {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.no-leaders {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.no-leaders svg {
+  width: 80px;
+  height: 80px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.no-leaders h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.no-leaders p {
+  font-size: 16px;
+  color: #999;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease-out;
+}
+
+.card h3 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.green {
+  background: #e7f8ee;
+  color: #2ecc71;
+}
+
+.red {
+  background: #ffe6e6;
+  color: #ff4d4d;
+}
+
+.yellow {
+  background: #fff3cd;
+  color: #f1c40f;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background: #f1f1f1;
+}
+
+.circle.green {
+  background: #e7f8ee;
+  color: #2ecc71;
+}
+
+.circle.red {
+  background: #ffe6e6;
+  color: #ff4d4d;
+}
+
+.circle.yellow {
+  background: #fff3cd;
+  color: #f1c40f;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.card a {
+  color: #ff4d5a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-header button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #e63946;
+}
+
+.members-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #f9f9f9;
+}
+
+.member-item:hover {
+    background: #f5f5f5;
+}
+
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.member-details {
+    flex: 1;
+}
+
+.member-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.member-email {
+    font-size: 12px;
+    color: #999;
+}
+
+.btn-remove {
+    padding: 6px 12px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-remove:hover {
+    background: #e63946;
+}
+
+.members-checkbox-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.member-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.member-checkbox-item:hover {
+    background-color: #f5f5f5;
+}
+
+.member-checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #e63946;
+}
+
+.btn-primary {
+    background: #e63946;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-secondary {
+    background: #fff;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+}
+
+.dark .menu-toggle {
+    color: #e0e0e0;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-bar {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    /* Overlay for mobile sidebar */
+    .sidebar::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+    
+    .sidebar.open::before {
+        opacity: 1;
+        pointer-events: all;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .page-title {
+        font-size: 20px;
+        min-width: auto;
+    }
+    
+    .search-bar {
+        max-width: 100%;
+        order: 3;
+        width: 100%;
+        margin-top: 12px;
+    }
+    
+    .header-right {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .header-right button {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+    
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding-top: 16px;
+    }
+    
+    .card {
+        padding: 16px;
+    }
+    
+    .content {
+        padding: 20px 16px;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+    
+    .page-header p {
+        font-size: 14px;
+    }
+    
+    .modal-box {
+        max-width: 95% !important;
+        margin: 1rem;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .notification-container {
+        margin-right: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 12px;
+    }
+    
+    .page-title {
+        font-size: 18px;
+    }
+    
+    .search-bar input {
+        padding: 10px 14px 10px 40px;
+        font-size: 14px;
+    }
+    
+    .header-right button {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .card h3 {
+        font-size: 16px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .status {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+    
+    .info {
+        flex-direction: column;
+        gap: 12px;
+        margin: 16px 0;
+    }
+    
+    .circle {
+        width: 50px;
+        height: 50px;
+        font-size: 14px;
+    }
+    
+    .stats {
+        font-size: 12px;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .modal-header {
+        padding: 16px;
+    }
+    
+    .modal-header h3 {
+        font-size: 18px;
+    }
+    
+    .input-field {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .member-item {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .member-info {
+        width: 100%;
+    }
+    
+    .btn-remove {
+        width: 100%;
+        text-align: center;
+    }
+}
+  </style>
+</head>
+<body>
+    <div class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text"><img src="img/bg removed.png" alt="Graphura"></div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="admin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="createadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    <span>Create</span>
+                </a>
+                <a href="billing.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Billing & Reports</span>
+                </a>
+                <a href="teamadmin.html" class="sidebar-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Leaders</span>
+                </a>
+                <a href="calendaradmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                </a>
+                <a href="settingsadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Log Out</span>
+                </a>
+            </div>
+  </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="header-left">
+                    <h1 class="page-title">Leaders</h1>
+                    <div class="search-bar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search leaders by name, domain, or email...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="notification-container">
+                        <svg class="notification-icon" id="notificationIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="notification-clear" id="clearAllNotifications">Clear all</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-details">
+                            <div class="user-name">Admin</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                        <div class="user-avatar">AD</div>
+                    </div>
+                </div>
+    </header>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+                <div class="content dashboard-content" id="dashboardContent">
+                    <div class="page-header">
+      <h1 class="page-title-gradient">Leaders <span class="title-highlight">Directory</span></h1>
+      <p class="page-description-gradient">View all <span class="text-highlight">leaders</span>, their <span class="text-highlight-2">domains</span>, and <span class="text-highlight-3">contact information</span>.</p>
+                    </div>
+
+                    <div class="cards" id="leadersContainer">
+                        <!-- Leaders will be loaded dynamically here -->
+    </div>
+    </div>
+    
+    <!-- Assign Domain Modal -->
+    <div id="assignDomainModal" class="modal-overlay hidden" onclick="if(event.target === this) closeAssignDomainModal()">
+        <div class="modal-box" style="max-width: 600px;" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="assignDomainTitle">Assign Domain to Leader</h3>
+                <button onclick="closeAssignDomainModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Select Leader *</label>
+                    <select id="assignLeaderSelect" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; margin-bottom: 20px;">
+                        <option value="">Select a leader</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #333;">Available Domains/Projects:</h4>
+                    <div id="availableDomainsContainer" class="members-checkbox-container">
+                        <!-- Available domains/projects will be populated here -->
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="button" onclick="closeAssignDomainModal()" class="btn-secondary" style="flex: 1;">Cancel</button>
+                    <button type="button" onclick="saveDomainAssignment()" class="btn-primary" style="flex: 1;">Assign Domain</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Manage Team Members Modal -->
+    <div id="manageTeamMembersModal" class="modal-overlay hidden" onclick="if(event.target === this) closeManageTeamMembersModal()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="manageTeamMembersTitle">Manage Leader Members</h3>
+                <button onclick="closeManageTeamMembersModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #333;">Current Leader Members:</h4>
+                    <div id="currentMembersList" class="members-list">
+                        <!-- Current members will be displayed here -->
+                    </div>
+                </div>
+                
+                <div style="border-top: 1px solid #e0e0e0; padding-top: 16px; margin-top: 16px;">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #333;">Add Existing Members:</h4>
+                    <div id="availableMembersContainer" class="members-checkbox-container">
+                        <!-- Available members checkboxes will be populated here -->
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #333;">Add New Employee:</h4>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <input type="text" id="newEmployeeName" placeholder="Employee Name" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                            <input type="email" id="newEmployeeEmail" placeholder="Email (optional)" style="flex: 1; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        <button type="button" onclick="addNewEmployee()" style="padding: 10px 20px; background: #e63946; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%;">Add Employee</button>
+                        <div id="newEmployeesList" style="margin-top: 12px;">
+                            <!-- Newly added employees will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button type="button" onclick="closeManageTeamMembersModal()" class="btn-secondary" style="flex: 1;">Cancel</button>
+                        <button type="button" onclick="saveTeamMembers()" class="btn-primary" style="flex: 1;">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+// Load data from localStorage
+let teams = JSON.parse(localStorage.getItem('teams')) || [];
+let projects = JSON.parse(localStorage.getItem('projects')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let users = JSON.parse(localStorage.getItem('users')) || [];
+
+// Reload data function
+function reloadData() {
+    teams = JSON.parse(localStorage.getItem('teams')) || [];
+    projects = JSON.parse(localStorage.getItem('projects')) || [];
+    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    users = JSON.parse(localStorage.getItem('users')) || [];
+}
+
+// Assign Domain Functions
+let currentAssigningLeaderId = null;
+
+function openAssignDomainModal(leaderId = null) {
+    reloadData();
+    const modal = document.getElementById('assignDomainModal');
+    const title = document.getElementById('assignDomainTitle');
+    const leaderSelect = document.getElementById('assignLeaderSelect');
+    const domainsContainer = document.getElementById('availableDomainsContainer');
+    
+    if (!modal) return;
+    
+    // Populate leader dropdown with existing leaders from database
+    if (leaderSelect) {
+        leaderSelect.innerHTML = '<option value="">Select a leader</option>';
+        const leaders = users.filter(u => u.role === 'leader');
+        leaders.forEach(leader => {
+            const option = document.createElement('option');
+            option.value = leader.id || leader.name;
+            option.textContent = leader.name;
+            if (leaderId && (leader.id === leaderId || leader.name === leaderId)) {
+                option.selected = true;
+                option.disabled = true;
+            }
+            leaderSelect.appendChild(option);
+        });
+    }
+    
+    // Populate available domains/projects
+    if (domainsContainer) {
+        domainsContainer.innerHTML = '';
+        
+        // Get all projects that don't have a team assigned or are available
+        const availableProjects = projects.filter(p => {
+            // Show projects that don't have a team or can be reassigned
+            return true; // Show all projects for assignment
+        });
+        
+        if (availableProjects.length === 0) {
+            domainsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No available projects/domains. Create projects first.</div>';
+        } else {
+            availableProjects.forEach(project => {
+                const checkboxItem = document.createElement('div');
+                checkboxItem.className = 'member-checkbox-item';
+                checkboxItem.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 6px; transition: background-color 0.2s; border: 1px solid #e0e0e0; margin-bottom: 8px;';
+                
+                // Check if this project is already assigned to a team
+                const assignedTeam = teams.find(t => t.id === project.teamId);
+                const isAssigned = assignedTeam !== undefined;
+                
+                checkboxItem.innerHTML = `
+                    <input type="checkbox" id="domain-${project.id}" value="${project.id}" ${isAssigned ? 'disabled' : ''} style="width: 18px; height: 18px; cursor: pointer; accent-color: #e63946;">
+                    <label for="domain-${project.id}" style="cursor: pointer; flex: 1;">
+                        <div style="font-weight: 600; color: #333;">${project.name}</div>
+                        <div style="font-size: 12px; color: #999; margin-top: 4px;">${project.description || 'No description'}</div>
+                        ${isAssigned ? `<div style="font-size: 11px; color: #e63946; margin-top: 4px;">Assigned to: ${assignedTeam.name}</div>` : ''}
+                    </label>
+                `;
+                domainsContainer.appendChild(checkboxItem);
+            });
+        }
+    }
+    
+    if (leaderId) {
+        currentAssigningLeaderId = leaderId;
+    }
+    
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAssignDomainModal() {
+    const modal = document.getElementById('assignDomainModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    currentAssigningLeaderId = null;
+    const leaderSelect = document.getElementById('assignLeaderSelect');
+    if (leaderSelect) leaderSelect.value = '';
+}
+
+function saveDomainAssignment() {
+    reloadData();
+    
+    const leaderSelect = document.getElementById('assignLeaderSelect');
+    if (!leaderSelect || !leaderSelect.value) {
+        alert('Please select a leader.');
+        return;
+    }
+    
+    const selectedLeaderId = leaderSelect.value;
+    const leader = users.find(u => (u.id === selectedLeaderId) || (u.name === selectedLeaderId && u.role === 'leader'));
+    
+    if (!leader) {
+        alert('Selected leader not found.');
+        return;
+    }
+    
+    // Get selected projects/domains
+    const checkboxes = document.querySelectorAll('#availableDomainsContainer input[type="checkbox"]:checked:not(:disabled)');
+    const selectedProjectIds = Array.from(checkboxes).map(cb => cb.value);
+    
+    if (selectedProjectIds.length === 0) {
+        alert('Please select at least one domain/project to assign.');
+        return;
+    }
+    
+    // Find or create team for this leader
+    let leaderTeam = teams.find(t => t.leader === leader.name);
+    
+    if (!leaderTeam) {
+        // Create a new team for this leader
+        leaderTeam = {
+            id: Date.now(),
+            name: `${leader.name}'s Team`,
+            description: '',
+            leader: leader.name,
+            members: [{
+                name: leader.name,
+                email: leader.email || `${leader.name.toLowerCase().replace(/\s+/g, '.')}@graphura.com`,
+                role: 'leader'
+            }],
+            status: 'Active',
+            createdAt: new Date().toISOString()
+        };
+        teams.push(leaderTeam);
+    }
+    
+    // Assign selected projects to this team
+    selectedProjectIds.forEach(projectId => {
+        const project = projects.find(p => String(p.id) === String(projectId));
+        if (project) {
+            project.teamId = leaderTeam.id;
+        }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('teams', JSON.stringify(teams));
+    localStorage.setItem('projects', JSON.stringify(projects));
+    
+    // Trigger storage event
+    window.dispatchEvent(new Event('storage'));
+    
+    // Reload and render
+    reloadData();
+    renderLeaders();
+    closeAssignDomainModal();
+    
+    alert(`Successfully assigned ${selectedProjectIds.length} domain(s)/project(s) to ${leader.name}!`);
+}
+
+// Render leaders dynamically
+function renderLeaders() {
+    const container = document.getElementById('leadersContainer');
+    if (!container) return;
+    
+    // Get all leaders from users
+    reloadData();
+    const leaders = users.filter(u => u.role === 'leader');
+    
+    if (leaders.length === 0) {
+        container.innerHTML = `
+            <div class="no-leaders">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h3>No Leaders Found</h3>
+                <p>Leaders will appear here once they are added to the system.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = leaders.map(leader => {
+        // Find teams this leader is leading
+        const leaderTeams = teams.filter(t => t.leader === leader.name);
+        const domainNames = leaderTeams.map(t => t.name).join(', ') || 'No Domain Assigned';
+        
+        // Get projects for leader's teams
+        const leaderTeamIds = leaderTeams.map(t => t.id);
+        const leaderProjects = projects.filter(p => leaderTeamIds.includes(p.teamId));
+        
+        // Get tasks for leader's projects
+        const leaderProjectIds = leaderProjects.map(p => p.id);
+        const leaderTasks = tasks.filter(t => leaderProjectIds.includes(t.projectId));
+        const completedTasks = leaderTasks.filter(t => t.status === 'Completed').length;
+        const totalTasks = leaderTasks.length;
+        
+        // Get member count across all teams
+        const totalMembers = leaderTeams.reduce((sum, team) => {
+            return sum + (team.members ? team.members.length : 0) + (team.leader ? 1 : 0);
+        }, 0);
+        
+        // Get leader initials
+        const initials = leader.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        
+        // Get email
+        const email = leader.email || `${leader.name.toLowerCase().replace(/\s+/g, '.')}@graphura.com`;
+        
+        return `
+            <div class="leader-card">
+                <div class="leader-card-header">
+                    <div class="leader-avatar">${initials}</div>
+                    <div class="leader-info">
+                        <div class="leader-name">
+                            ${leader.name}
+                            <span class="leader-badge leader-badge-gradient">Leader</span>
+                        </div>
+                        <div class="leader-domain">
+                            <svg class="leader-domain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <span class="domain-text-gradient">${domainNames}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="leader-details">
+                    <div class="leader-detail-item">
+                        <svg class="leader-detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="leader-detail-text">
+                            <div class="leader-detail-label">Email</div>
+                            <div class="leader-detail-value">${email}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="leader-detail-item">
+                        <svg class="leader-detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <div class="leader-detail-text">
+                            <div class="leader-detail-label">Teams</div>
+                            <div class="leader-detail-value">${leaderTeams.length} Team${leaderTeams.length !== 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="leader-stats">
+                    <div class="leader-stat">
+                        <div class="leader-stat-value">${totalTasks}</div>
+                        <div class="leader-stat-label">Total Tasks</div>
+                    </div>
+                    <div class="leader-stat">
+                        <div class="leader-stat-value">${completedTasks}</div>
+                        <div class="leader-stat-label">Completed</div>
+                    </div>
+                    <div class="leader-stat">
+                        <div class="leader-stat-value">${totalMembers}</div>
+                        <div class="leader-stat-label">Members</div>
+                    </div>
+                </div>
+                
+                <div class="leader-contact">
+                    <button class="leader-contact-button" onclick="openAssignDomainModal('${leader.id || leader.name}')" style="background: linear-gradient(135deg, #1976d2, #1565c0);">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Assign Domain
+                    </button>
+                    <button class="leader-contact-button" onclick="contactLeader('${email}', '${leader.name}')" style="margin-top: 8px; background: linear-gradient(135deg, #e63946, #c1121f);">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Contact Leader
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Contact leader function
+function contactLeader(email, name) {
+    window.location.href = `mailto:${email}?subject=Contact from Team Management System&body=Hello ${name},%0D%0A%0D%0A`;
+}
+
+// Team Member Management Functions
+let currentEditingTeamId = null;
+let selectedMembersToAdd = [];
+let newEmployeesToAdd = [];
+
+function openManageTeamMembers(teamId) {
+    // Reload data first to ensure we have the latest
+    reloadData();
+    
+    // Store the teamId (can be string or number) - normalize to string for consistency
+    currentEditingTeamId = String(teamId);
+    
+    // Find team - handle both string and number IDs
+    const team = teams.find(t => {
+        return String(t.id) === String(teamId) || t.id == teamId;
+    });
+    
+    if (!team) {
+        console.error('Team not found with ID:', teamId, 'Available teams:', teams.map(t => ({ id: t.id, name: t.name })));
+        alert('Leader not found. Please refresh the page and try again.');
+        return;
+    }
+    
+    // Initialize members array if it doesn't exist
+    if (!team.members) {
+        team.members = [];
+    }
+    
+    const modal = document.getElementById('manageTeamMembersModal');
+    const title = document.getElementById('manageTeamMembersTitle');
+    const currentMembersList = document.getElementById('currentMembersList');
+    const availableMembersContainer = document.getElementById('availableMembersContainer');
+    
+    if (!modal) {
+        console.error('Modal not found!');
+        alert('Error: Modal not found. Please refresh the page.');
+        return;
+    }
+    
+    if (title) title.textContent = `Manage Members - ${team.name}`;
+    
+    // Display current members (including leader)
+    if (currentMembersList) {
+        // Create a combined list of all members including leader
+        const allMembers = [];
+        
+        // Add leader first if exists
+        if (team.leader) {
+            const leaderUser = users.find(u => u.name === team.leader);
+            allMembers.push({
+                name: team.leader,
+                email: leaderUser?.email || `${team.leader.toLowerCase().replace(/\s+/g, '.')}@graphura.com`,
+                role: 'leader',
+                isLeader: true
+            });
+        }
+        
+        // Add other members (excluding leader if already added)
+        if (team.members && team.members.length > 0) {
+            team.members.forEach(member => {
+                const memberName = typeof member === 'string' ? member : member.name;
+                if (memberName !== team.leader) {
+                    const memberEmail = typeof member === 'object' ? member.email : '';
+                    const memberUser = users.find(u => u.name === memberName);
+                    allMembers.push({
+                        name: memberName,
+                        email: memberEmail || memberUser?.email || `${memberName.toLowerCase().replace(/\s+/g, '.')}@graphura.com`,
+                        role: typeof member === 'object' ? member.role : (memberUser?.role || 'employee'),
+                        isLeader: false
+                    });
+                }
+            });
+        }
+        
+        if (allMembers.length === 0) {
+            currentMembersList.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No members added yet.</div>';
+        } else {
+            currentMembersList.innerHTML = allMembers.map((member, index) => {
+                const initials = member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const actualIndex = team.members ? team.members.findIndex(m => {
+                    const mName = typeof m === 'string' ? m : m.name;
+                    return mName === member.name;
+                }) : -1;
+                
+                return `
+                    <div class="member-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 8px; background: ${member.isLeader ? '#fff5f5' : '#fff'};">
+                        <div class="member-info" style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                            <div class="member-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #e63946 0%, #c1121f 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">${initials}</div>
+                            <div class="member-details" style="flex: 1;">
+                                <div class="member-name" style="font-weight: 600; color: #333; font-size: 14px;">${member.name} ${member.isLeader ? '<span style="color: #e63946; font-size: 12px;">(Leader)</span>' : ''}</div>
+                                ${member.email ? `<div class="member-email" style="font-size: 12px; color: #999; margin-top: 2px;">${member.email}</div>` : ''}
+                            </div>
+                        </div>
+                        ${member.isLeader ? '<span style="color: #999; font-size: 12px; padding: 6px 12px;">Cannot remove</span>' : `<button class="btn-remove" onclick="removeTeamMember(${actualIndex >= 0 ? actualIndex : index})" style="padding: 6px 12px; background: #ff4d4d; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Remove</button>`}
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+    
+    // Populate available members (all users except those already in team and the leader)
+    if (availableMembersContainer) {
+        reloadData();
+        const currentMemberNames = team.members.map(m => {
+            const name = typeof m === 'string' ? m : m.name;
+            return name.toLowerCase();
+        });
+        
+        const availableUsers = users.filter(u => {
+            const userName = u.name.toLowerCase();
+            const isLeader = u.name === team.leader;
+            const alreadyInTeam = currentMemberNames.includes(userName);
+            const isEmployeeOrLeader = u.role === 'employee' || u.role === 'leader';
+            
+            return !isLeader && !alreadyInTeam && isEmployeeOrLeader;
+        });
+        
+        availableMembersContainer.innerHTML = '';
+        if (availableUsers.length === 0) {
+            availableMembersContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No available users to add.</div>';
+        } else {
+            availableUsers.forEach(user => {
+                const checkboxItem = document.createElement('div');
+                checkboxItem.className = 'member-checkbox-item';
+                checkboxItem.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 6px; transition: background-color 0.2s;';
+                checkboxItem.innerHTML = `
+                    <input type="checkbox" id="available-member-${user.name.replace(/\s+/g, '-')}" value="${user.name.replace(/"/g, '&quot;')}" data-email="${(user.email || '').replace(/"/g, '&quot;')}" style="width: 18px; height: 18px; cursor: pointer; accent-color: #e63946;">
+                    <label for="available-member-${user.name.replace(/\s+/g, '-')}" style="cursor: pointer; flex: 1;">
+                        <div style="font-weight: 600; color: #333;">${user.name}</div>
+                        ${user.email ? `<div style="font-size: 12px; color: #999;">${user.email}</div>` : ''}
+                    </label>
+                `;
+                availableMembersContainer.appendChild(checkboxItem);
+            });
+        }
+    }
+    
+    selectedMembersToAdd = [];
+    newEmployeesToAdd = []; // Reset new employees list
+    updateNewEmployeesList(); // Clear the new employees display
+    
+    // Show the modal
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    } else {
+        console.error('Modal element not found!');
+        alert('Error: Modal not found. Please refresh the page.');
+    }
+}
+
+function addNewEmployee() {
+    const nameInput = document.getElementById('newEmployeeName');
+    const emailInput = document.getElementById('newEmployeeEmail');
+    
+    if (!nameInput || !nameInput.value.trim()) {
+        alert('Please enter an employee name.');
+        return;
+    }
+    
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim() || `${name.toLowerCase().replace(/\s+/g, '.')}@graphura.com`;
+    
+    // Check if already in new employees list
+    if (newEmployeesToAdd.some(e => e.name.toLowerCase() === name.toLowerCase())) {
+        alert('This employee is already in the list to be added.');
+        return;
+    }
+    
+    // Check if already a team member
+    const team = teams.find(t => {
+        return String(t.id) === String(currentEditingTeamId) || t.id == currentEditingTeamId;
+    });
+    if (team && team.members) {
+        const currentMemberNames = team.members.map(m => typeof m === 'string' ? m : m.name);
+        if (currentMemberNames.some(n => n.toLowerCase() === name.toLowerCase())) {
+            alert('This employee is already a leader member.');
+            return;
+        }
+    }
+    
+    // Add to new employees list
+    newEmployeesToAdd.push({
+        name: name,
+        email: email,
+        role: 'employee'
+    });
+    
+    // Clear inputs
+    nameInput.value = '';
+    emailInput.value = '';
+    
+    // Update display
+    updateNewEmployeesList();
+}
+
+function updateNewEmployeesList() {
+    const newEmployeesList = document.getElementById('newEmployeesList');
+    if (!newEmployeesList) return;
+    
+    if (newEmployeesToAdd.length === 0) {
+        newEmployeesList.innerHTML = '';
+        return;
+    }
+    
+    newEmployeesList.innerHTML = newEmployeesToAdd.map((emp, index) => {
+        const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        return `
+            <div class="member-item" style="margin-bottom: 8px;">
+                <div class="member-info">
+                    <div class="member-avatar">${initials}</div>
+                    <div class="member-details">
+                        <div class="member-name">${emp.name} <span style="font-size: 11px; color: #999; font-weight: normal;">(New)</span></div>
+                        <div class="member-email">${emp.email}</div>
+                    </div>
+                </div>
+                <button class="btn-remove" onclick="removeNewEmployee(${index})" style="padding: 6px 12px; background: #ff4d4d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">Remove</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function removeNewEmployee(index) {
+    newEmployeesToAdd.splice(index, 1);
+    updateNewEmployeesList();
+}
+
+function removeTeamMember(index) {
+    if (!currentEditingTeamId) {
+        alert('Error: No leader selected.');
+        return;
+    }
+    
+    reloadData();
+    const team = teams.find(t => {
+        return String(t.id) === String(currentEditingTeamId) || t.id == currentEditingTeamId;
+    });
+    if (!team || !team.members) {
+        alert('Error: Leader not found.');
+        return;
+    }
+    
+    const memberToRemove = team.members[index];
+    if (!memberToRemove) {
+        alert('Error: Member not found.');
+        return;
+    }
+    
+    const memberName = typeof memberToRemove === 'string' ? memberToRemove : memberToRemove.name;
+    
+    // Prevent removing the leader
+    if (memberName === team.leader) {
+        alert('Cannot remove the team leader. Please assign a new leader first.');
+        return;
+    }
+    
+    // Confirm removal
+    if (!confirm(`Are you sure you want to remove ${memberName} from this leader?`)) {
+        return;
+    }
+    
+    // Remove the member
+    team.members.splice(index, 1);
+    
+    // Save immediately
+    localStorage.setItem('teams', JSON.stringify(teams));
+    
+    // Refresh the modal to show updated list
+    openManageTeamMembers(currentEditingTeamId);
+    // Also refresh leaders display
+    reloadData();
+    renderLeaders();
+}
+
+function closeManageTeamMembersModal() {
+    const modal = document.getElementById('manageTeamMembersModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        // Restore body scroll
+        document.body.style.overflow = '';
+    }
+    currentEditingTeamId = null;
+    selectedMembersToAdd = [];
+    newEmployeesToAdd = [];
+    // Clear new employee inputs
+    const nameInput = document.getElementById('newEmployeeName');
+    const emailInput = document.getElementById('newEmployeeEmail');
+    if (nameInput) nameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    updateNewEmployeesList();
+}
+
+function saveTeamMembers() {
+    if (!currentEditingTeamId) {
+        console.error('No team ID set for editing');
+        alert('Error: No leader selected.');
+        return;
+    }
+    
+    // Reload data first to get latest users
+    reloadData();
+    
+    // Find team after reloading data - handle different ID types
+    const team = teams.find(t => {
+        return String(t.id) === String(currentEditingTeamId) || t.id == currentEditingTeamId;
+    });
+    
+    if (!team) {
+        console.error('Team not found with ID:', currentEditingTeamId);
+        alert('Error: Leader not found. Please try again.');
+        return;
+    }
+    
+    // Initialize members array if it doesn't exist
+    if (!team.members) team.members = [];
+    
+    // Get selected members to add from checkboxes
+    const checkboxes = document.querySelectorAll('#availableMembersContainer input[type="checkbox"]:checked');
+    const newMembers = Array.from(checkboxes).map(cb => {
+        const name = cb.value;
+        const email = cb.getAttribute('data-email') || '';
+        const user = users.find(u => u.name === name);
+        return { 
+            name, 
+            email: email || user?.email || `${name.toLowerCase().replace(/\s+/g, '.')}@graphura.com`,
+            role: user?.role || 'employee'
+        };
+    });
+    
+    // Ensure leader is in members if not already
+    if (team.leader) {
+        const leaderInMembers = team.members.some(m => {
+            const memberName = typeof m === 'string' ? m : m.name;
+            return memberName === team.leader;
+        });
+        if (!leaderInMembers) {
+            const leaderUser = users.find(u => u.name === team.leader);
+            team.members.push({
+                name: team.leader,
+                email: leaderUser?.email || `${team.leader.toLowerCase().replace(/\s+/g, '.')}@graphura.com`,
+                role: 'leader'
+            });
+        }
+    }
+    
+    // Add selected existing members (from checkboxes)
+    newMembers.forEach(newMember => {
+        const exists = team.members.some(m => {
+            const memberName = typeof m === 'string' ? m : m.name;
+            return memberName.toLowerCase() === newMember.name.toLowerCase();
+        });
+        if (!exists) {
+            team.members.push(newMember);
+        }
+    });
+    
+    // Add new employees (create user accounts for them)
+    newEmployeesToAdd.forEach(newEmp => {
+        // Check if user already exists
+        let existingUser = users.find(u => 
+            u.name.toLowerCase() === newEmp.name.toLowerCase() || 
+            u.email.toLowerCase() === newEmp.email.toLowerCase()
+        );
+        
+        if (!existingUser) {
+            // Create new user account
+            const newUser = {
+                id: `employee-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                name: newEmp.name,
+                email: newEmp.email,
+                password: 'password123', // Default password
+                role: 'employee'
+            };
+            users.push(newUser);
+        }
+        
+        // Add to team members
+        const exists = team.members.some(m => {
+            const memberName = typeof m === 'string' ? m : m.name;
+            return memberName.toLowerCase() === newEmp.name.toLowerCase();
+        });
+        if (!exists) {
+            team.members.push({
+                name: newEmp.name,
+                email: newEmp.email,
+                role: 'employee'
+            });
+        }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('teams', JSON.stringify(teams));
+    localStorage.setItem('users', JSON.stringify(users)); // Ensure users list is saved (in case new employees were added)
+    
+    // Trigger storage event for other tabs
+    window.dispatchEvent(new Event('storage'));
+    
+    // Refresh display
+    reloadData();
+    renderLeaders();
+    
+    // Close modal
+    closeManageTeamMembersModal();
+    
+    alert('Leader members updated successfully!');
+}
+
+
+// Logout functionality
+const logoutBtn = document.querySelector('.sidebar-item.logout');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (confirm('Do you want to logout?')) {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'login.html';
+    }
+  });
+}
+
+
+// Notification system
+function loadNotifications() {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (!currentUser) return;
+    
+    const userNotifications = currentUser.role === 'admin' 
+        ? notifications
+        : notifications.filter(n => n.targetRole === currentUser.role || n.targetRole === 'all' || (n.targetUser && n.targetUser === currentUser.name));
+    
+    userNotifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    const unreadCount = userNotifications.filter(n => !n.read).length;
+    const badge = document.getElementById('notificationBadge');
+    const notificationList = document.getElementById('notificationList');
+    
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.classList.add('show');
+        } else {
+            badge.classList.remove('show');
+        }
+    }
+    
+    if (notificationList) {
+        if (userNotifications.length === 0) {
+            notificationList.innerHTML = `
+                <div class="notification-empty">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <p>No notifications</p>
+                </div>
+            `;
+        } else {
+            notificationList.innerHTML = userNotifications.map(notification => {
+                const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                const initials = notification.from ? notification.from.substring(0, 2).toUpperCase() : 'AD';
+                const unreadClass = !notification.read ? 'unread' : '';
+                
+                return `
+                    <div class="notification-item ${unreadClass}" data-id="${notification.id}">
+                        <div class="notification-icon-small">${initials}</div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notification.title}</div>
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            notificationList.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    markNotificationAsRead(id);
+                });
+            });
+        }
+    }
+}
+
+function markNotificationAsRead(id) {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const notification = notifications.find(n => n.id === id);
+    if (notification && !notification.read) {
+        notification.read = true;
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        loadNotifications();
+    }
+}
+
+function clearAllNotifications() {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Filter out notifications that match the current user
+    const remaining = notifications.filter(n => {
+        const matchesUser = n.targetRole === currentUser.role || 
+                           n.targetRole === 'all' || 
+                           (n.targetUser && n.targetUser === currentUser.name);
+        
+        // Keep notifications that don't match the current user
+        return !matchesUser;
+    });
+    
+    localStorage.setItem('notifications', JSON.stringify(remaining));
+    
+    // Dispatch custom event for same-tab updates
+    window.dispatchEvent(new CustomEvent('notificationsUpdated'));
+    
+    loadNotifications();
+}
+
+function getTimeAgo(date) {
+    const now = new Date();
+    const diff = now - date;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    return 'Just now';
+}
+
+// Search functionality
+function performTeamAdminSearch(searchTerm) {
+    const leaderCards = document.querySelectorAll('.leader-card');
+    let hasMatches = false;
+    
+    document.querySelectorAll('.no-results-message').forEach(msg => msg.remove());
+    
+    if (!searchTerm) {
+        leaderCards.forEach(card => card.style.display = '');
+        return;
+    }
+    
+    leaderCards.forEach(card => {
+        const cardText = card.textContent.toLowerCase();
+        const matches = cardText.includes(searchTerm.toLowerCase());
+        card.style.display = matches ? '' : 'none';
+        if (matches) hasMatches = true;
+    });
+    
+    if (!hasMatches && searchTerm) {
+        const content = document.querySelector('.content, .dashboard-content');
+        if (content) {
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results-message';
+            noResults.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); margin-top: 32px;';
+            noResults.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 64px; height: 64px; color: #ccc; margin: 0 auto 16px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <h3 style="font-size: 18px; font-weight: 600; color: #666; margin-bottom: 8px;">No results found</h3>
+                <p style="font-size: 14px; color: #999;">Try adjusting your search terms</p>
+            `;
+            const cardsContainer = document.getElementById('leadersContainer');
+            if (cardsContainer) {
+                cardsContainer.appendChild(noResults);
+            }
+        }
+    }
+}
+
+// Load and apply settings (dark mode, etc.)
+function loadSettings() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    const role = currentUser.role;
+    const settingsKey = 'settings_' + role;
+    const settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+    if (settings.darkMode) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+}
+loadSettings();
+window.addEventListener('storage', function(e) {
+    if (e.key && e.key.startsWith('settings_')) loadSettings();
+});
+window.addEventListener('settingsUpdated', loadSettings);
+
+// Mobile menu toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    if (window.innerWidth <= 768 && sidebar && menuToggle) {
+        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+        }
+    }
+});
+
+// Initialize teams on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handler to redirect to settings page
+    const userInfoEl = document.querySelector('.user-info');
+    if (userInfoEl) {
+        userInfoEl.addEventListener('click', function() {
+            window.location.href = 'settingsadmin.html';
+        });
+    }
+    
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            performTeamAdminSearch(searchTerm);
+        });
+    }
+    
+    reloadData();
+    renderLeaders();
+    
+    // Load notifications
+    loadNotifications();
+    
+    // Notification icon click handler
+    const notificationIcon = document.getElementById('notificationIcon');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const clearBtn = document.getElementById('clearAllNotifications');
+    
+    if (notificationIcon && notificationDropdown) {
+        notificationIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+            loadNotifications();
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.remove('show');
+            }
+        });
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearAllNotifications();
+        });
+    }
+    
+    // Listen for storage changes (from other tabs/windows)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'teams' || e.key === 'projects' || e.key === 'tasks' || e.key === 'users' || !e.key) {
+            reloadData();
+            renderLeaders();
+        }
+        if (e.key === 'notifications' || !e.key) {
+            loadNotifications();
+        }
+    });
+    
+    // Also listen for custom events for same-tab updates
+    window.addEventListener('localStorageUpdated', function() {
+        reloadData();
+        renderLeaders();
+    });
+    
+    // Real-time updates - check for changes every 2 seconds
+    setInterval(function() {
+        const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
+        const currentTeams = JSON.parse(localStorage.getItem('teams')) || [];
+        const currentProjects = JSON.parse(localStorage.getItem('projects')) || [];
+        const currentTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Check if data has changed
+        const usersChanged = JSON.stringify(currentUsers) !== JSON.stringify(users);
+        const teamsChanged = JSON.stringify(currentTeams) !== JSON.stringify(teams);
+        const projectsChanged = JSON.stringify(currentProjects) !== JSON.stringify(projects);
+        const tasksChanged = JSON.stringify(currentTasks) !== JSON.stringify(tasks);
+        
+        if (usersChanged || teamsChanged || projectsChanged || tasksChanged) {
+            reloadData();
+            renderLeaders();
+        }
+    }, 2000);
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const manageModal = document.getElementById('manageTeamMembersModal');
+            if (manageModal && !manageModal.classList.contains('hidden')) {
+                closeManageTeamMembersModal();
+            }
+            const assignModal = document.getElementById('assignDomainModal');
+            if (assignModal && !assignModal.classList.contains('hidden')) {
+                closeAssignDomainModal();
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>

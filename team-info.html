@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Employee Management</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-red: #e63946;
+            --bg-light: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-main: #333;
+            --sidebar-width: 250px;
+            --border-color: #e0e0e0;
+        }
+
+        .dark {
+            --bg-light: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-main: #e0e0e0;
+            --border-color: #404040;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .dark body {
+            background: #1a1a1a;
+            background-color: #1a1a1a;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+        }
+
+        /* --- Global Layout --- */
+        .container { 
+            display: flex; 
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        .sidebar-nav { flex: 1; padding: 20px 0; overflow-y: auto; }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .sidebar-item:hover { background-color: rgba(0,0,0,0.05); }
+        .sidebar-item.active { color: var(--primary-red); background: #fff5f5; border-left: 4px solid var(--primary-red); }
+
+        .sidebar-item svg { width: 20px; height: 20px; }
+
+        .sidebar-item.logout { margin-top: auto; color: #999; border-top: 1px solid var(--border-color); }
+
+        /* Main Content */
+        .main-content { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
+
+        .header {
+            background: linear-gradient(to right, #ffffff, #f8f9fa);
+            padding: 16px 32px;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, #e63946, #1976d2, #388e3c, #f57c00) 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 2px 4px rgba(230, 57, 70, 0.2));
+        }
+
+        /* --- Toolbar & Filters --- */
+        .toolbar { 
+            padding: 24px 32px; 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            align-items: center;
+            background: var(--bg-light);
+        }
+        
+        .filter-btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: var(--card-bg);
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .filter-btn.active { 
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white; 
+            border-color: #e63946;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.3);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .domain-select-filter {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-red);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.15);
+        }
+        
+        .domain-select-filter:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15), 0 4px 12px rgba(230, 57, 70, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* --- Grid & Cards --- */
+        .content { padding: 0 32px 32px 32px; }
+        .employee-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .employee-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            border-radius: 16px;
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #e63946, #1976d2) 1;
+            border-image-slice: 1;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .employee-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e63946, #1976d2);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .employee-card:hover { 
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.2);
+        }
+        
+        .employee-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .profile { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .avatar { 
+            width: 45px; height: 45px; border-radius: 50%; 
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            color: white;
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 700; font-size: 18px;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .header .avatar,
+        #headerAvatar {
+            cursor: pointer;
+        }
+        
+        .employee-card:hover .avatar {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+        }
+
+        .task-status-box {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.05) 0%, rgba(25, 118, 210, 0.05) 100%);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(230, 57, 70, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .employee-card:hover .task-status-box {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(25, 118, 210, 0.1) 100%);
+            border-color: rgba(230, 57, 70, 0.2);
+        }
+        
+        .dark .task-status-box { background: rgba(255,255,255,0.05); }
+
+        .status-pill { 
+            font-size: 10px; 
+            padding: 4px 10px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .status-progress { 
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #e65100;
+            border: 1px solid rgba(245, 124, 0, 0.3);
+        }
+        .status-done { 
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+            border: 1px solid rgba(56, 142, 60, 0.3);
+        }
+
+        .btn-assign { 
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 8px; 
+            width: 100%; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.3);
+        }
+        .btn-assign:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+            background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            width: 95%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(230, 57, 70, 0.1);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, #e63946, #1976d2) 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        .modal-header h3 {
+            font-weight: 700;
+            background: linear-gradient(135deg, #e63946 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.3px;
+        }
+
+        .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+        .input-field {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            border: 1px solid var(--border-color); border-radius: 6px;
+            background: var(--bg-light); color: var(--text-main);
+        }
+
+        .field-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #777; }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); transition: 0.3s; }
+            .sidebar.mobile-active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .toolbar { padding: 15px; }
+            .content { padding: 0 15px 15px 15px; }
+            .input-group { grid-template-columns: 1fr !important; gap: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+     <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text">
+                    <img src="img/bg removed.png" alt="Graphura">
+                </div>
+            </div>
+            <div class="sidebar-nav">
+                <a href="team-leader.html" class="sidebar-item ">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="taskleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    <span>Tasks</span>
+                    </a>
+                <a href="team-info.html" class="sidebar-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Team Info</span>
+</a>
+                <a href="calendarleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                    </a>
+                <a href="settingsleader.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+    <div class="main-content">
+        <header class="header">
+            <h2>Team Information</h2>
+            <div class="user-info" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <span id="headerUserName">Loading...</span>
+                <div class="avatar" id="headerAvatar" style="width: 35px; height: 35px; font-size: 14px;">TL</div>
+            </div>
+        </header>
+
+        <div class="toolbar">
+            <select id="domainFilter" class="domain-select-filter" onchange="applyAllFilters()">
+                <option value="all">All Domains</option>
+                <!-- Domains will be populated dynamically -->
+            </select>
+            <button class="filter-btn active" onclick="setStatusFilter('all', this)">All Members</button>
+            <button class="filter-btn" onclick="setStatusFilter('progress', this)">In Progress</button>
+            <button class="filter-btn" onclick="setStatusFilter('completed', this)">Completed</button>
+        </div>
+
+        <div class="content">
+            <div class="employee-grid" id="memberGrid">
+                </div>
+        </div>
+    </div>
+</div>
+
+<div id="assignModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalUserTitle">New Assignment</h3>
+            <button onclick="closeModal()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="taskForm" onsubmit="handleTaskSubmit(event)">
+                <label class="field-label">Task Title</label>
+                <input type="text" id="taskTitle" class="input-field" placeholder="Enter task title..." required>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label class="field-label">Domain</label>
+                        <select id="taskDomain" class="input-field" required>
+                            <!-- Domains will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="field-label">Priority</label>
+                        <select id="taskPriority" class="input-field" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label class="field-label">Due Date</label>
+                <input type="date" id="taskDueDate" class="input-field" required>
+
+                <label class="field-label">Instructions</label>
+                <textarea id="taskDescription" class="input-field" rows="3" placeholder="Provide details..."></textarea>
+                
+                <button type="submit" class="btn-assign">Create & Assign Task</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get domains from teams where current user is the leader
+    function getLeaderDomains() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) return [];
+        
+        const teams = JSON.parse(localStorage.getItem('teams')) || [];
+        const projects = JSON.parse(localStorage.getItem('projects')) || [];
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Find teams where current user is the leader
+        const leaderTeams = teams.filter(team => {
+            const teamLeader = team.leader || team.teamLeader;
+            return teamLeader === currentUser.name || 
+                   (teamLeader && currentUser.name && teamLeader.toLowerCase() === currentUser.name.toLowerCase());
+        });
+        
+        const domains = new Set();
+        
+        // Get domains from projects in leader's teams
+        leaderTeams.forEach(team => {
+            const teamProjects = projects.filter(p => p.teamId === team.id);
+            teamProjects.forEach(project => {
+                if (project.domain) {
+                    domains.add(project.domain);
+                }
+            });
+        });
+        
+        // Also get domains from team members
+        leaderTeams.forEach(team => {
+            if (team.members && Array.isArray(team.members)) {
+                team.members.forEach(member => {
+                    let memberName = '';
+                    let memberEmail = '';
+                    
+                    if (typeof member === 'string') {
+                        memberName = member;
+                    } else if (member && member.name) {
+                        memberName = member.name;
+                        memberEmail = member.email || '';
+                    } else if (member && member.email) {
+                        memberEmail = member.email;
+                    }
+                    
+                    const user = users.find(u => u.name === memberName || u.email === memberEmail);
+                    if (user && user.domain) {
+                        domains.add(user.domain);
+                    }
+                });
+            }
+        });
+        
+        return Array.from(domains).sort();
+    }
+    
+    // Load team members from localStorage
+    function loadTeamMembers() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) return [];
+        
+        const teams = JSON.parse(localStorage.getItem('teams')) || [];
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Find teams where current user is the leader
+        const leaderTeams = teams.filter(team => {
+            const teamLeader = team.leader || team.teamLeader;
+            return teamLeader === currentUser.name || 
+                   (teamLeader && currentUser.name && teamLeader.toLowerCase() === currentUser.name.toLowerCase());
+        });
+        
+        let allMembers = [];
+        
+        leaderTeams.forEach(team => {
+            if (team.members && Array.isArray(team.members)) {
+                team.members.forEach(member => {
+                    let memberName = '';
+                    let memberEmail = '';
+                    
+                    if (typeof member === 'string') {
+                        memberName = member;
+                    } else if (member && member.name) {
+                        memberName = member.name;
+                        memberEmail = member.email || '';
+                    } else if (member && member.email) {
+                        memberEmail = member.email;
+                        const user = users.find(u => u.email === member.email);
+                        memberName = user ? user.name : member.email;
+                    }
+                    
+                    if (memberName && !allMembers.find(m => m.name === memberName)) {
+                        // Find user details
+                        const user = users.find(u => u.name === memberName || u.email === memberEmail);
+                        const domain = user?.domain || 'General';
+                        
+                        // Find active task for this member
+                        const memberTasks = tasks.filter(t => {
+                            const assignee = t.assignedTo || t.assignee || (t.assigneeId ? (users.find(u => u.id === t.assigneeId)?.name || '') : '');
+                            return assignee === memberName;
+                        });
+                        
+                        const activeTask = memberTasks.find(t => t.status !== 'Completed') || memberTasks[0];
+                        const taskTitle = activeTask ? activeTask.title : 'No active task';
+                        const status = activeTask ? (activeTask.status === 'Completed' ? 'completed' : 'progress') : 'progress';
+                        
+                        allMembers.push({
+                            id: user?.id || Date.now() + Math.random(),
+                            name: memberName,
+                            domain: domain,
+                            task: taskTitle,
+                            status: status
+                        });
+                    }
+                });
+            }
+        });
+        
+        return allMembers;
+    }
+    
+    // Populate domain filter dropdown
+    function populateDomainFilter() {
+        const domainFilter = document.getElementById('domainFilter');
+        const taskDomainSelect = document.getElementById('taskDomain');
+        
+        if (!domainFilter) return;
+        
+        const domains = getLeaderDomains();
+        
+        // Clear existing options except "All Domains"
+        domainFilter.innerHTML = '<option value="all">All Domains</option>';
+        
+        // Add domains from leader's teams
+        domains.forEach(domain => {
+            const option = document.createElement('option');
+            option.value = domain;
+            option.textContent = domain;
+            domainFilter.appendChild(option);
+        });
+        
+        // Also update the modal domain select
+        if (taskDomainSelect) {
+            taskDomainSelect.innerHTML = '';
+            domains.forEach(domain => {
+                const option = document.createElement('option');
+                option.value = domain;
+                option.textContent = domain;
+                taskDomainSelect.appendChild(option);
+            });
+        }
+    }
+    
+    let membersData = [];
+
+    let currentStatusFilter = 'all';
+    let selectedMember = null;
+
+    // --- Core Functions ---
+
+    function renderGrid(data) {
+        const grid = document.getElementById('memberGrid');
+        if(data.length === 0) {
+            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">No members found in this domain.</p>`;
+            return;
+        }
+
+        grid.innerHTML = data.map(m => `
+            <div class="employee-card">
+                <div class="profile">
+                    <div class="avatar">${m.name.charAt(0)}</div>
+                    <div>
+                        <h4 style="margin:0; font-weight: 700; background: linear-gradient(135deg, #333 0%, #1976d2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.3px;">${m.name}</h4>
+                        <small style="color:var(--primary-red); font-weight:700; background: linear-gradient(135deg, #e63946 0%, #d62828 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${m.domain}</small>
+                    </div>
+                </div>
+                <div class="task-status-box">
+                    <p style="font-size: 11px; margin-bottom: 4px; color:#888;">Ongoing Task:</p>
+                    <p style="font-weight:600; font-size:13px; margin-bottom:8px;">${m.task}</p>
+                    <span class="status-pill ${m.status === 'progress' ? 'status-progress' : 'status-done'}">
+                        ${m.status === 'progress' ? 'In Progress' : 'Completed'}
+                    </span>
+                </div>
+                <button class="btn-assign" onclick="openAssignModal('${m.name}', '${m.domain}')">New Assignment</button>
+            </div>
+        `).join('');
+    }
+
+    function applyAllFilters() {
+        const domainVal = document.getElementById('domainFilter').value;
+        
+        let filtered = membersData.filter(m => {
+            const domainMatch = (domainVal === 'all' || m.domain === domainVal);
+            const statusMatch = (currentStatusFilter === 'all' || m.status === currentStatusFilter);
+            return domainMatch && statusMatch;
+        });
+
+        renderGrid(filtered);
+    }
+
+    function setStatusFilter(status, btn) {
+        currentStatusFilter = status;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyAllFilters();
+    }
+
+    // --- Modal Logic ---
+    function openAssignModal(name, domain) {
+        selectedMember = name;
+        document.getElementById('modalUserTitle').innerText = "Assign to: " + name;
+        document.getElementById('taskDomain').value = domain;
+        document.getElementById('assignModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('assignModal').style.display = 'none';
+        document.getElementById('taskForm').reset();
+    }
+
+    function handleTaskSubmit(event) {
+        event.preventDefault();
+        const title = document.getElementById('taskTitle').value;
+        // In a real app, you'd push this to your tasks array in localStorage
+        alert(`Successfully assigned "${title}" to ${selectedMember}`);
+        closeModal();
+    }
+
+    // --- Initialization ---
+    function init() {
+        // Load User Info
+        const user = JSON.parse(localStorage.getItem('currentUser') || '{"name":"Lead Officer"}');
+        const userNameEl = document.getElementById('headerUserName');
+        const headerAvatarEl = document.getElementById('headerAvatar');
+        
+        if (userNameEl) userNameEl.innerText = user.name || 'Team Leader';
+        if (headerAvatarEl) {
+            const initials = user.name ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'TL';
+            headerAvatarEl.innerText = initials;
+        }
+
+        // Check Dark Mode
+        const settings = JSON.parse(localStorage.getItem('settings_leader') || '{}');
+        if (settings.darkMode) document.documentElement.classList.add('dark');
+
+        // Populate domain filter with leader's domains
+        populateDomainFilter();
+        
+        // Load team members from localStorage
+        membersData = loadTeamMembers();
+        
+        // Render Initial Grid
+        renderGrid(membersData);
+        
+        // Setup logout handler
+        const logoutBtn = document.querySelector('.sidebar-item.logout');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(confirm('Log out from Graphura?')) {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+        
+        // Add click handler to redirect to settings page
+        const userInfoEl = document.querySelector('.user-info');
+        if (userInfoEl) {
+            userInfoEl.addEventListener('click', function() {
+                window.location.href = 'settingsleader.html';
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

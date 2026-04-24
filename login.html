@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Graphura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  html {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Light animated background */
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+    background-attachment: fixed;
+    padding: 24px 20px 40px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  /* Animated gradient overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(230, 57, 70, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.18) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: gradientPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes gradientPulse {
+    0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    50% { opacity: 0.7; transform: scale(1.1) rotate(2deg); }
+  }
+
+  /* Animated background shapes container */
+  .bg-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Floating circles - more dominant */
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.85;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .shape-1 {
+    width: 320px;
+    height: 320px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.35), rgba(255, 107, 122, 0.25));
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+    animation-duration: 25s;
+  }
+
+  .shape-2 {
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(135deg, rgba(25, 118, 210, 0.32), rgba(66, 165, 245, 0.22));
+    top: 60%;
+    right: -50px;
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+
+  .shape-3 {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, rgba(186, 104, 200, 0.35), rgba(206, 147, 216, 0.25));
+    bottom: 10%;
+    left: 10%;
+    animation-delay: -10s;
+    animation-duration: 22s;
+  }
+
+  .shape-4 {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(56, 142, 60, 0.32), rgba(102, 187, 106, 0.22));
+    top: 20%;
+    right: 15%;
+    animation-delay: -3s;
+    animation-duration: 18s;
+  }
+
+  .shape-5 {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(245, 124, 0, 0.35), rgba(255, 183, 77, 0.25));
+    top: 70%;
+    left: 20%;
+    animation-delay: -7s;
+    animation-duration: 15s;
+  }
+
+  .shape-6 {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.3), rgba(255, 105, 180, 0.22));
+    top: 40%;
+    left: 5%;
+    animation-delay: -12s;
+    animation-duration: 28s;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+      transform: translate(30px, -30px) rotate(5deg) scale(1.05);
+    }
+    50% {
+      transform: translate(-20px, 20px) rotate(-5deg) scale(0.95);
+    }
+    75% {
+      transform: translate(20px, 10px) rotate(3deg) scale(1.02);
+    }
+  }
+
+  /* Floating particles - larger, more visible */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: particleFloat 15s infinite ease-in-out;
+    box-shadow: 0 0 12px rgba(100, 100, 100, 0.5);
+  }
+
+  .particle:nth-child(1) {
+    background: rgba(230, 57, 70, 0.75);
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 12s;
+  }
+
+  .particle:nth-child(2) {
+    background: rgba(25, 118, 210, 0.75);
+    left: 20%;
+    animation-delay: -2s;
+    animation-duration: 14s;
+  }
+
+  .particle:nth-child(3) {
+    background: rgba(186, 104, 200, 0.75);
+    left: 30%;
+    animation-delay: -4s;
+    animation-duration: 16s;
+  }
+
+  .particle:nth-child(4) {
+    background: rgba(56, 142, 60, 0.75);
+    left: 40%;
+    animation-delay: -6s;
+    animation-duration: 13s;
+  }
+
+  .particle:nth-child(5) {
+    background: rgba(245, 124, 0, 0.75);
+    left: 50%;
+    animation-delay: -8s;
+    animation-duration: 15s;
+  }
+
+  .particle:nth-child(6) {
+    background: rgba(230, 57, 70, 0.7);
+    left: 60%;
+    animation-delay: -3s;
+    animation-duration: 11s;
+  }
+
+  .particle:nth-child(7) {
+    background: rgba(25, 118, 210, 0.7);
+    left: 70%;
+    animation-delay: -5s;
+    animation-duration: 17s;
+  }
+
+  .particle:nth-child(8) {
+    background: rgba(186, 104, 200, 0.7);
+    left: 80%;
+    animation-delay: -7s;
+    animation-duration: 14s;
+  }
+
+  .particle:nth-child(9) {
+    background: rgba(56, 142, 60, 0.7);
+    left: 90%;
+    animation-delay: -1s;
+    animation-duration: 12s;
+  }
+
+  .particle:nth-child(10) {
+    background: rgba(245, 124, 0, 0.7);
+    left: 15%;
+    animation-delay: -9s;
+    animation-duration: 18s;
+  }
+
+  @keyframes particleFloat {
+    0% {
+      transform: translateY(100vh) scale(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.85;
+      transform: translateY(90vh) scale(1);
+    }
+    90% {
+      opacity: 0.85;
+      transform: translateY(10vh) scale(1);
+    }
+    100% {
+      transform: translateY(-10vh) scale(0);
+      opacity: 0;
+    }
+  }
+
+  /* Glowing orbs - more dominant */
+  .orbs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    animation: orbPulse 10s infinite ease-in-out;
+  }
+
+  .orb-1 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(230, 57, 70, 0.4) 0%, rgba(230, 57, 70, 0.15) 40%, transparent 70%);
+    top: -150px;
+    right: -150px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(25, 118, 210, 0.35) 0%, rgba(25, 118, 210, 0.12) 40%, transparent 70%);
+    bottom: -100px;
+    left: -100px;
+    animation-delay: -3s;
+  }
+
+  .orb-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(186, 104, 200, 0.35) 0%, rgba(186, 104, 200, 0.12) 40%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes orbPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.15);
+      opacity: 0.65;
+    }
+  }
+
+  .orb-3 {
+    animation: orbPulse3 10s infinite ease-in-out -6s;
+  }
+
+  @keyframes orbPulse3 {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.15);
+      opacity: 0.65;
+    }
+  }
+
+  /* Animated grid lines - more visible */
+  .grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    background-image: 
+      linear-gradient(rgba(230, 57, 70, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230, 57, 70, 0.1) 1px, transparent 1px);
+    background-size: 45px 45px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% {
+      transform: perspective(500px) rotateX(60deg) translateY(0);
+    }
+    100% {
+      transform: perspective(500px) rotateX(60deg) translateY(50px);
+    }
+  }
+
+  /* Light card */
+  .container {
+    width: 400px;
+    max-width: calc(100vw - 40px);
+    flex-shrink: 0;
+    margin: 24px auto 40px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    padding: 40px 36px 36px;
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  /* Shimmer effect on container */
+  .container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    animation: shimmer 3s infinite;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+  }
+
+  /* Soft glow accents - more visible */
+  .container-glow {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(35px);
+    pointer-events: none;
+  }
+
+  .container-glow-1 {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.4), rgba(255, 107, 122, 0.3));
+    top: -70px;
+    right: -70px;
+    animation: glowPulse 4s infinite ease-in-out;
+  }
+
+  .container-glow-2 {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, rgba(25, 118, 210, 0.35), rgba(66, 165, 245, 0.25));
+    bottom: -70px;
+    left: -70px;
+    animation: glowPulse 4s infinite ease-in-out 2s;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* Hover effect on container */
+  .container:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 25px 70px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+  }
+
+  .container {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 26px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo .logo-image {
+    margin-bottom: 8px;
+  }
+
+  .logo img {
+    width: 180px;
+    height: auto;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .logo p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* Toggle */
+  .toggle-container {
+    display: flex;
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    position: relative;
+    z-index: 1;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .toggle-btn {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #e63946, #ff6b7a);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+    animation: btnPop 0.3s ease;
+  }
+
+  .toggle-btn:hover:not(.active) {
+    background: rgba(230, 57, 70, 0.1);
+    color: #e63946;
+  }
+
+  @keyframes btnPop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  .form-container {
+    display: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-container.active {
+    display: block;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    font-size: 14px;
+    background: #ffffff;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .field input::placeholder {
+    color: #999;
+  }
+
+  .field select {
+    color: #333;
+    cursor: pointer;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+    background: #ffffff;
+    animation: inputFocus 0.3s ease;
+  }
+
+  @keyframes inputFocus {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+    100% { transform: scale(1); }
+  }
+
+  .field small {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px 0;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e63946, #ff6b7a);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(230, 57, 70, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .btn:hover::before {
+    left: 100%;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+    background: linear-gradient(135deg, #c1121f, #e63946);
+  }
+
+  .btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.3);
+  }
+
+  .btn:disabled {
+    background: linear-gradient(135deg, #cccccc, #999999);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .btn:disabled::before {
+    display: none;
+  }
+
+  .success-message,
+  .error-message {
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: none;
+    border: 2px solid transparent;
+    font-weight: 500;
+  }
+
+  .success-message {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #66bb6a;
+  }
+
+  .error-message {
+    background: #ffebee;
+    color: #c62828;
+    border-color: #ef5350;
+  }
+
+  .success-message.show,
+  .error-message.show {
+    display: block;
+  }
+
+  .demo-accounts {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px dashed rgba(230, 57, 70, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .demo-accounts h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .demo-account-item {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-account-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #e63946, #ff6b7a);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  .demo-account-item:hover {
+    background: #ffffff;
+    border-color: #e63946;
+    transform: translateY(-2px) translateX(4px);
+    box-shadow: 0 6px 16px rgba(230, 57, 70, 0.2);
+    padding-left: 18px;
+  }
+
+  .demo-account-item:hover::before {
+    transform: scaleY(1);
+  }
+
+  .demo-account-item:active {
+    transform: translateY(0) translateX(4px) scale(0.98);
+  }
+
+  .demo-account-role {
+    font-size: 11px;
+    font-weight: 700;
+    color: #e63946;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .demo-account-details {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .demo-account-details strong {
+    color: #333;
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .container {
+      width: 100%;
+      max-width: 360px;
+      margin: 20px auto 32px;
+      padding: 28px 22px 24px;
+      border-radius: 18px;
+    }
+
+    .logo img {
+      width: 140px;
+    }
+
+    .toggle-container {
+      margin-bottom: 20px;
+    }
+
+    .demo-accounts {
+      margin-top: 18px;
+      padding-top: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Animated Background Elements -->
+  <div class="grid-bg"></div>
+  
+  <div class="orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+    <div class="shape shape-6"></div>
+  </div>
+  
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="container">
+    <!-- Glow effects inside container -->
+    <div class="container-glow container-glow-1"></div>
+    <div class="container-glow container-glow-2"></div>
+    
+    <div class="logo">
+      <img src="img/bg removed.png" alt="Graphura" class="logo-image">
+      <p id="form-title">Sign in to your account</p>
+    </div>
+
+    <div class="toggle-container">
+      <button class="toggle-btn active" id="login-toggle">Login</button>
+      <button class="toggle-btn" id="signup-toggle">Sign Up</button>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="form-container active">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="Enter your email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password" />
+      </div>
+      <div class="field">
+        <label for="login-domain">Domain</label>
+        <select id="login-domain">
+          <option value="">Select domain (Not required for Admin)</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="Full Stack">Full Stack</option>
+          <option value="Mobile">Mobile</option>
+          <option value="DevOps">DevOps</option>
+          <option value="UI/UX">UI/UX</option>
+          <option value="QA/Testing">QA/Testing</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Other">Other</option>
+        </select>
+        <small id="domain-help-text">Admin can leave this blank. Leaders and Employees must select their assigned domain.</small>
+      </div>
+      <div class="field">
+        <label for="login-secret-key">Secret Key</label>
+        <input type="password" id="login-secret-key" placeholder="Enter secret key" required autocomplete="off" />
+        <small>You must provide one of the valid secret keys</small>
+      </div>
+      <button type="submit" class="btn" id="login-btn">Login</button>
+    </form>
+
+      <!-- Demo Accounts Section -->
+      <div class="demo-accounts" id="demo-accounts">
+        <h3>Demo Accounts</h3>
+        <div class="demo-account-item" data-email="admin@gmail.com" data-password="admin123" data-secret-key="GRAPHURA_SECRET_KEY_2026_ADMIN" data-domain="">
+          <div class="demo-account-role">Admin</div>
+          <div class="demo-account-details">
+            <strong>Email:</strong> admin@gmail.com<br>
+            <strong>Password:</strong> admin123<br>
+            <strong>Secret Key:</strong> <span style="color: #e63946; font-weight: 700;">GRAPHURA_SECRET_KEY_2026_ADMIN</span><br>
+            <strong>Domain:</strong> <span style="color: #e63946;">Not required - Admin controls all domains</span>
+          </div>
+        </div>
+        <div class="demo-account-item" data-email="leader@gmail.com" data-password="leader123" data-secret-key="GRAPHURA_SECRET_KEY_2026_LEADER" data-domain="Frontend">
+          <div class="demo-account-role">Team Leader</div>
+          <div class="demo-account-details">
+            <strong>Email:</strong> leader@gmail.com<br>
+            <strong>Password:</strong> leader123<br>
+            <strong>Secret Key:</strong> <span style="color: #e63946; font-weight: 700;">GRAPHURA_SECRET_KEY_2026_LEADER</span><br>
+            <strong>Domain:</strong> <span style="color: #e63946; font-weight: 700;">Frontend</span> (Assigned Domain - Must select this)
+          </div>
+        </div>
+        <div class="demo-account-item" data-email="employee@gmail.com" data-password="employee123" data-secret-key="GRAPHURA_SECRET_KEY_2026_EMPLOYEE" data-domain="Frontend">
+          <div class="demo-account-role">Employee</div>
+          <div class="demo-account-details">
+            <strong>Email:</strong> employee@gmail.com<br>
+            <strong>Password:</strong> employee123<br>
+            <strong>Secret Key:</strong> <span style="color: #e63946; font-weight: 700;">GRAPHURA_SECRET_KEY_2026_EMPLOYEE</span><br>
+            <strong>Domain:</strong> <span style="color: #e63946; font-weight: 700;">Frontend</span> (Assigned Domain - Must select this)
+          </div>
+        </div>
+      </div>
+
+    <!-- Signup Form -->
+    <form id="signup-form" class="form-container">
+      <div class="field">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" placeholder="Enter your full name" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="Enter your email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" placeholder="Create a password" required autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label for="signup-role">Role</label>
+        <select id="signup-role" required>
+          <option value="">Select a role</option>
+          <option value="employee">Employee</option>
+          <option value="leader">Team Leader</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="signup-domain">Domain</label>
+        <select id="signup-domain" required>
+          <option value="">Select domain</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="Full Stack">Full Stack</option>
+          <option value="Mobile">Mobile</option>
+          <option value="DevOps">DevOps</option>
+          <option value="UI/UX">UI/UX</option>
+          <option value="QA/Testing">QA/Testing</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="signup-secret-key">Secret Key</label>
+        <input type="password" id="signup-secret-key" placeholder="Enter secret key" required autocomplete="off" />
+        <small>You must provide one of the valid secret keys</small>
+      </div>
+      <button type="submit" class="btn" id="signup-btn">Sign Up</button>
+    </form>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // SECRET KEY CONFIGURATION
+    // ==========================================
+    // Define your 3 secret keys here
+    // Users must provide one of these keys to login/signup
+    
+    // Option 1: Single shared secret key (all users use same key)
+    // const SECRET_KEYS = ['YOUR_SECRET_KEY_2024'];
+    
+    // Option 2: Multiple keys - user provides ANY ONE of them
+    const SECRET_KEYS = [
+      'GRAPHURA_SECRET_KEY_2026_ADMIN',
+      'GRAPHURA_SECRET_KEY_2026_LEADER', 
+      'GRAPHURA_SECRET_KEY_2026_EMPLOYEE'
+    ];
+    
+    // Option 3: Role-based keys (uncomment to use this instead)
+    // const SECRET_KEYS_BY_ROLE = {
+    //   'admin': 'ADMIN_SECRET_KEY_2024',
+    //   'leader': 'LEADER_SECRET_KEY_2024',
+    //   'employee': 'EMPLOYEE_SECRET_KEY_2024'
+    // };
+    
+    // Function to validate secret key
+    function validateSecretKey(secretKey, userRole = null) {
+      if (!secretKey || secretKey.trim() === '') {
+        return { valid: false, message: 'Secret key is required' };
+      }
+      
+      const trimmedKey = secretKey.trim();
+      
+      // Option 1 & 2: Check if key matches any of the SECRET_KEYS
+      if (SECRET_KEYS.includes(trimmedKey)) {
+        return { valid: true, message: 'Secret key verified' };
+      }
+      
+      // Option 3: If using role-based keys (uncomment if using this approach)
+      // if (userRole && SECRET_KEYS_BY_ROLE[userRole] && SECRET_KEYS_BY_ROLE[userRole] === trimmedKey) {
+      //   return { valid: true, message: 'Secret key verified' };
+      // }
+      
+      return { valid: false, message: 'Invalid secret key. Please check and try again.' };
+    }
+
+    // Initialize all demo data - FORCE UPDATE to ensure accounts always work
+    function initializeDemoData() {
+      // Initialize Demo Accounts - ALWAYS ensure these exist with correct credentials
+      const demoAccounts = [
+        {
+          id: 'admin-1',
+          email: 'admin@gmail.com',
+          password: 'admin123',
+          name: 'Admin User',
+          role: 'admin',
+          domain: null // Admin doesn't need domain
+        },
+        {
+          id: 'leader-1',
+          email: 'leader@gmail.com',
+          password: 'leader123',
+          name: 'Sarah Johnson',
+          role: 'leader',
+          domain: 'Frontend' // Leader assigned to Frontend domain
+        },
+        {
+          id: 'employee-1',
+          email: 'employee@gmail.com',
+          password: 'employee123',
+          name: 'Alex Morgan',
+          role: 'employee',
+          domain: 'Frontend' // Employee assigned to Frontend domain
+        }
+      ];
+      
+      try {
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Remove any existing demo accounts first (to avoid duplicates)
+        users = users.filter(u => 
+          u.email !== 'admin@gmail.com' && 
+          u.email !== 'leader@gmail.com' && 
+          u.email !== 'employee@gmail.com'
+        );
+        
+        // Add demo accounts with correct credentials
+        demoAccounts.forEach(demoAccount => {
+          users.push({
+            id: demoAccount.id,
+            email: demoAccount.email,
+            password: demoAccount.password,
+            name: demoAccount.name,
+            role: demoAccount.role
+          });
+        });
+        
+        // Save to localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Verify accounts were saved
+        const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        const adminExists = savedUsers.find(u => u.email === 'admin@gmail.com' && u.password === 'admin123');
+        const leaderExists = savedUsers.find(u => u.email === 'leader@gmail.com' && u.password === 'leader123');
+        const employeeExists = savedUsers.find(u => u.email === 'employee@gmail.com' && u.password === 'employee123');
+        
+        if (!adminExists || !leaderExists || !employeeExists) {
+          console.error('Demo accounts not properly initialized');
+          // Force re-initialize
+          localStorage.setItem('users', JSON.stringify(demoAccounts));
+        }
+      } catch (error) {
+        console.error('Error initializing demo accounts:', error);
+        // Fallback: set demo accounts directly
+        localStorage.setItem('users', JSON.stringify(demoAccounts));
+      }
+      
+      // Initialize Demo Teams
+      const teams = JSON.parse(localStorage.getItem('teams')) || [];
+      const demoTeams = [
+        {
+          id: 'team-1',
+          name: 'Frontend Development Team',
+          description: 'Responsible for UI/UX development and frontend architecture',
+          leader: 'Sarah Johnson',
+          members: [
+            { name: 'Sarah Johnson', email: 'leader@gmail.com', role: 'leader' },
+            { name: 'Alex Morgan', email: 'employee@gmail.com', role: 'employee' },
+            { name: 'Mike Chen', email: 'mike.chen@graphura.com', role: 'employee' },
+            { name: 'Emily Davis', email: 'emily.davis@graphura.com', role: 'employee' }
+          ],
+          createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'team-2',
+          name: 'Backend Development Team',
+          description: 'Handles server-side logic, APIs, and database management',
+          leader: 'Sarah Johnson',
+          members: [
+            { name: 'Sarah Johnson', email: 'leader@gmail.com', role: 'leader' },
+            { name: 'David Wilson', email: 'david.wilson@graphura.com', role: 'employee' },
+            { name: 'Lisa Anderson', email: 'lisa.anderson@graphura.com', role: 'employee' }
+          ],
+          createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'team-3',
+          name: 'Full Stack Development Team',
+          description: 'End-to-end web application development',
+          leader: 'Sarah Johnson',
+          members: [
+            { name: 'Sarah Johnson', email: 'leader@gmail.com', role: 'leader' },
+            { name: 'Alex Morgan', email: 'employee@gmail.com', role: 'employee' },
+            { name: 'John Smith', email: 'john.smith@graphura.com', role: 'employee' }
+          ],
+          createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      
+      // Update or add demo teams
+      demoTeams.forEach(demoTeam => {
+        const existingIndex = teams.findIndex(t => t.id === demoTeam.id);
+        if (existingIndex !== -1) {
+          teams[existingIndex] = { ...teams[existingIndex], ...demoTeam };
+        } else {
+          teams.push(demoTeam);
+        }
+      });
+      
+      localStorage.setItem('teams', JSON.stringify(teams));
+      
+      // Initialize Demo Projects
+      const projects = JSON.parse(localStorage.getItem('projects')) || [];
+      const demoProjects = [
+        {
+          id: 1,
+          name: 'E-Commerce Platform Redesign',
+          description: 'Complete redesign and modernization of the e-commerce platform with React and Node.js',
+          status: 'In Progress',
+          leader: 'Sarah Johnson',
+          teamId: 'team-1',
+          progress: 65,
+          createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+          deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 2,
+          name: 'RESTful API Development',
+          description: 'Building scalable REST APIs for mobile and web applications',
+          status: 'In Progress',
+          leader: 'Sarah Johnson',
+          teamId: 'team-2',
+          progress: 80,
+          createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(),
+          deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 3,
+          name: 'Task Management Dashboard',
+          description: 'Modern task management system with real-time updates and collaboration features',
+          status: 'In Progress',
+          leader: 'Sarah Johnson',
+          teamId: 'team-3',
+          progress: 45,
+          createdAt: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString(),
+          deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 4,
+          name: 'Responsive Website Migration',
+          description: 'Migrating legacy website to modern responsive design with mobile-first approach',
+          status: 'In Progress',
+          leader: 'Sarah Johnson',
+          teamId: 'team-1',
+          progress: 90,
+          createdAt: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000).toISOString(),
+          deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 5,
+          name: 'Database Optimization',
+          description: 'Optimizing database queries and implementing caching strategies',
+          status: 'Completed',
+          leader: 'Sarah Johnson',
+          teamId: 'team-2',
+          progress: 100,
+          createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+          deadline: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      
+      // Update or add demo projects
+      demoProjects.forEach(demoProject => {
+        const existingIndex = projects.findIndex(p => p.id === demoProject.id);
+        if (existingIndex !== -1) {
+          projects[existingIndex] = { ...projects[existingIndex], ...demoProject };
+        } else {
+          projects.push(demoProject);
+        }
+      });
+      
+      localStorage.setItem('projects', JSON.stringify(projects));
+      
+      // Initialize Demo Tasks
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      const demoTasks = [
+        {
+          id: 1,
+          title: 'Design User Authentication Flow',
+          description: 'Create login, signup, and password reset UI components with validation',
+          projectId: 1,
+          assignedTo: 'Alex Morgan',
+          status: 'In Progress',
+          priority: 'High',
+          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 2,
+          title: 'Implement Shopping Cart Functionality',
+          description: 'Build cart management with add, remove, and update quantity features',
+          projectId: 1,
+          assignedTo: 'Alex Morgan',
+          status: 'Pending',
+          priority: 'High',
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 3,
+          title: 'Create Product API Endpoints',
+          description: 'Develop RESTful endpoints for product CRUD operations',
+          projectId: 2,
+          assignedTo: 'David Wilson',
+          status: 'Completed',
+          priority: 'Medium',
+          dueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 4,
+          title: 'Setup Database Schema',
+          description: 'Design and implement database tables for user management',
+          projectId: 2,
+          assignedTo: 'Lisa Anderson',
+          status: 'In Progress',
+          priority: 'High',
+          dueDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 5,
+          title: 'Build Task List Component',
+          description: 'Create reusable task list component with drag-and-drop functionality',
+          projectId: 3,
+          assignedTo: 'Alex Morgan',
+          status: 'In Progress',
+          priority: 'Medium',
+          dueDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 6,
+          title: 'Implement Real-time Notifications',
+          description: 'Add WebSocket support for real-time task updates and notifications',
+          projectId: 3,
+          assignedTo: 'John Smith',
+          status: 'Pending',
+          priority: 'Low',
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 7,
+          title: 'Mobile Responsive Design',
+          description: 'Ensure all pages are fully responsive for mobile devices',
+          projectId: 4,
+          assignedTo: 'Mike Chen',
+          status: 'Completed',
+          priority: 'High',
+          dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 8,
+          title: 'Performance Testing',
+          description: 'Conduct load testing and optimize page load times',
+          projectId: 4,
+          assignedTo: 'Emily Davis',
+          status: 'In Progress',
+          priority: 'Medium',
+          dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 9,
+          title: 'Query Optimization',
+          description: 'Optimize slow database queries and add proper indexing',
+          projectId: 5,
+          assignedTo: 'David Wilson',
+          status: 'Completed',
+          priority: 'High',
+          dueDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 10,
+          title: 'Implement Redis Caching',
+          description: 'Setup Redis cache for frequently accessed data',
+          projectId: 5,
+          assignedTo: 'Lisa Anderson',
+          status: 'Completed',
+          priority: 'Medium',
+          dueDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+          createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+          createdDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      
+      // Update or add demo tasks
+      demoTasks.forEach(demoTask => {
+        const existingIndex = tasks.findIndex(t => t.id === demoTask.id);
+        if (existingIndex !== -1) {
+          tasks[existingIndex] = { ...tasks[existingIndex], ...demoTask };
+        } else {
+          tasks.push(demoTask);
+        }
+      });
+      
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      
+      // Initialize Demo Billing Data
+      const billingData = JSON.parse(localStorage.getItem('billingData')) || {
+        invoices: [
+          {
+            id: 'INV-2024-001',
+            client: 'Tech Solutions Inc.',
+            project: 'E-Commerce Platform Redesign',
+            amount: 15000,
+            status: 'Paid',
+            date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+            dueDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: 'INV-2024-002',
+            client: 'Digital Marketing Agency',
+            project: 'RESTful API Development',
+            amount: 12000,
+            status: 'Pending',
+            date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+            dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: 'INV-2024-003',
+            client: 'StartupXYZ',
+            project: 'Task Management Dashboard',
+            amount: 18000,
+            status: 'Paid',
+            date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            dueDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ],
+        revenue: {
+          total: 45000,
+          thisMonth: 15000,
+          lastMonth: 30000
+        },
+        expenses: {
+          total: 12000,
+          thisMonth: 4000,
+          lastMonth: 8000
+        }
+      };
+      
+      localStorage.setItem('billingData', JSON.stringify(billingData));
+    }
+    
+    // Initialize all demo data on page load
+    // Run immediately
+    initializeDemoData();
+    
+    // Also ensure it runs when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeDemoData);
+    }
+
+    // Wait for DOM to be ready before setting up event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get all form elements
+      const loginToggle = document.getElementById('login-toggle');
+      const signupToggle = document.getElementById('signup-toggle');
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const formTitle = document.getElementById('form-title');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const demoAccountsSection = document.getElementById('demo-accounts');
+      const emailInput = document.getElementById('login-email');
+      const passwordInput = document.getElementById('login-password');
+      const loginDomainInput = document.getElementById('login-domain');
+      const loginSecretKeyInput = document.getElementById('login-secret-key');
+      const signupNameInput = document.getElementById('signup-name');
+      const signupEmailInput = document.getElementById('signup-email');
+      const signupPasswordInput = document.getElementById('signup-password');
+      const signupRoleInput = document.getElementById('signup-role');
+      const signupDomainInput = document.getElementById('signup-domain');
+      const signupSecretKeyInput = document.getElementById('signup-secret-key');
+
+      // Demo account click handlers - copy all data to login form
+      const demoAccountItems = document.querySelectorAll('.demo-account-item');
+      demoAccountItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const email = this.getAttribute('data-email') || '';
+          const password = this.getAttribute('data-password') || '';
+          const secretKey = this.getAttribute('data-secret-key') || '';
+          const domain = this.getAttribute('data-domain') || '';
+          
+          // Switch to login form if not already active
+          if (loginForm && !loginForm.classList.contains('active') && loginToggle) {
+            loginToggle.click();
+          }
+          
+          // Fill in all login fields
+          if (emailInput) emailInput.value = email;
+          if (passwordInput) passwordInput.value = password;
+          if (loginSecretKeyInput) loginSecretKeyInput.value = secretKey;
+          if (loginDomainInput) loginDomainInput.value = domain;
+          
+          // Clear any previous error/success messages
+          if (errorMessage) {
+            errorMessage.classList.remove('show');
+            errorMessage.textContent = '';
+          }
+          if (successMessage) successMessage.classList.remove('show');
+          
+          // Scroll to login form so user sees the filled fields
+          const container = document.querySelector('.container');
+          if (container) {
+            const loginField = document.getElementById('login-email');
+            if (loginField) loginField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          
+          // Focus the first field briefly so user sees form is ready
+          if (emailInput) {
+            emailInput.focus();
+          }
+        });
+      });
+      
+      // Update domain help text based on email input
+      emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        const domainHelpText = document.getElementById('domain-help-text');
+        if (domainHelpText) {
+          if (email === 'admin@gmail.com') {
+            domainHelpText.textContent = 'Admin can leave this blank (controls all domains)';
+          } else if (email === 'leader@gmail.com' || email === 'employee@gmail.com') {
+            domainHelpText.textContent = 'Must select "Frontend" domain (your assigned domain)';
+          } else {
+            domainHelpText.textContent = 'Admin can leave this blank. Leaders and Employees must select their assigned domain.';
+          }
+        }
+      });
+
+      // Toggle between login and signup
+      loginToggle.addEventListener('click', function() {
+        loginToggle.classList.add('active');
+        signupToggle.classList.remove('active');
+        loginForm.classList.add('active');
+        signupForm.classList.remove('active');
+        if (demoAccountsSection) demoAccountsSection.style.display = 'block';
+        formTitle.textContent = 'Sign in to your account';
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+      });
+
+      signupToggle.addEventListener('click', function() {
+        signupToggle.classList.add('active');
+        loginToggle.classList.remove('active');
+        signupForm.classList.add('active');
+        loginForm.classList.remove('active');
+        if (demoAccountsSection) demoAccountsSection.style.display = 'none';
+        formTitle.textContent = 'Create your account';
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+      });
+
+      // Login form submission
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const domain = loginDomainInput.value;
+        const secretKey = loginSecretKeyInput.value.trim();
+        
+        // Hide previous messages
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+        
+        // Validate secret key first
+        const keyValidation = validateSecretKey(secretKey);
+        if (!keyValidation.valid) {
+          errorMessage.textContent = keyValidation.message;
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        // Ensure demo accounts exist before checking (especially for GitHub Pages)
+        const demoEmails = ['admin@gmail.com', 'leader@gmail.com', 'employee@gmail.com'];
+        if (demoEmails.includes(email)) {
+          // Re-initialize demo accounts if this is a demo account login attempt
+          initializeDemoData();
+        }
+        
+        // Get users from localStorage (after potential re-initialization)
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Find user by email and password
+        const user = users.find(u => u.email === email && u.password === password);
+        
+        if (!user) {
+          // If demo account login fails, try one more time to initialize
+          if (demoEmails.includes(email)) {
+            initializeDemoData();
+            const updatedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+            const retryUser = updatedUsers.find(u => u.email === email && u.password === password);
+            if (retryUser) {
+              // Validate domain for non-admin users
+              if (retryUser.role !== 'admin') {
+                // Domain is required for leaders and employees
+                if (!domain || domain.trim() === '') {
+                  errorMessage.textContent = 'Domain is required for ' + retryUser.role + ' role. Please select a domain.';
+                  errorMessage.classList.add('show');
+                  return;
+                }
+                
+                // Check if user has a domain assigned
+                if (retryUser.domain) {
+                  // User has a domain - must match exactly
+                  if (retryUser.domain !== domain) {
+                    errorMessage.textContent = 'Invalid domain. You can only login with your assigned domain: ' + retryUser.domain;
+                    errorMessage.classList.add('show');
+                    return;
+                  }
+                } else {
+                  // User doesn't have a domain yet - assign it now
+                  retryUser.domain = domain;
+                  // Update user in localStorage
+                  const updatedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                  const userIndex = updatedUsers.findIndex(u => u.id === retryUser.id);
+                  if (userIndex !== -1) {
+                    updatedUsers[userIndex].domain = domain;
+                    localStorage.setItem('users', JSON.stringify(updatedUsers));
+                  }
+                }
+              }
+              
+              // Store current user in session
+              const currentUserData = {
+                id: retryUser.id,
+                email: retryUser.email,
+                name: retryUser.name,
+                role: retryUser.role
+              };
+              
+              // Add domain if provided (or skip for admin)
+              if (domain) {
+                currentUserData.domain = domain;
+              } else if (retryUser.domain) {
+                // Use stored domain if no domain selected
+                currentUserData.domain = retryUser.domain;
+              }
+              
+              localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+              
+              // Redirect based on role
+              switch(retryUser.role) {
+                case 'admin':
+                  window.location.href = 'admin.html';
+                  return;
+                case 'leader':
+                  window.location.href = 'team-leader.html';
+                  return;
+                case 'employee':
+                  window.location.href = 'employee.html';
+                  return;
+              }
+            }
+          }
+          errorMessage.textContent = 'Invalid email or password';
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        // Validate domain for non-admin users
+        if (user.role !== 'admin') {
+          // Domain is required for leaders and employees
+          if (!domain || domain.trim() === '') {
+            errorMessage.textContent = 'Domain is required for ' + user.role + ' role. Please select a domain.';
+            errorMessage.classList.add('show');
+            return;
+          }
+          
+          // Check if user has a domain assigned
+          if (user.domain) {
+            // User has a domain - must match exactly
+            if (user.domain !== domain) {
+              errorMessage.textContent = 'Invalid domain. You can only login with your assigned domain: ' + user.domain;
+              errorMessage.classList.add('show');
+              return;
+            }
+          } else {
+            // User doesn't have a domain yet - assign it now
+            user.domain = domain;
+            // Update user in localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex !== -1) {
+              users[userIndex].domain = domain;
+              localStorage.setItem('users', JSON.stringify(users));
+            }
+          }
+        }
+        
+        // Store current user in session
+        const currentUserData = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        };
+        
+        // Add domain if provided (or skip for admin)
+        if (domain) {
+          currentUserData.domain = domain;
+        } else if (user.domain) {
+          // Use stored domain if no domain selected (shouldn't happen for non-admin, but just in case)
+          currentUserData.domain = user.domain;
+        }
+        
+        localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+        
+        // Redirect based on role
+        switch(user.role) {
+          case 'admin':
+            window.location.href = 'admin.html';
+            break;
+          case 'leader':
+            window.location.href = 'team-leader.html';
+            break;
+          case 'employee':
+            window.location.href = 'employee.html';
+            break;
+          default:
+            errorMessage.textContent = 'Unknown user role';
+            errorMessage.classList.add('show');
+        }
+      });
+
+      // Signup form submission
+      signupForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = signupNameInput.value.trim();
+        const email = signupEmailInput.value.trim();
+        const password = signupPasswordInput.value;
+        const role = signupRoleInput.value;
+        const secretKey = signupSecretKeyInput.value.trim();
+        
+        // Hide previous messages
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+        
+        // Validation
+        if (!name || !email || !password || !role || !secretKey) {
+          errorMessage.textContent = 'Please fill in all fields including secret key';
+          errorMessage.classList.add('show');
+          return;
+        }
+
+        if (password.length < 6) {
+          errorMessage.textContent = 'Password must be at least 6 characters';
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        // Validate secret key
+        const keyValidation = validateSecretKey(secretKey, role);
+        if (!keyValidation.valid) {
+          errorMessage.textContent = keyValidation.message;
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Check if email already exists
+        const existingUser = users.find(u => u.email === email);
+        if (existingUser) {
+          errorMessage.textContent = 'Email already registered. Please login instead.';
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        // Get domain value
+        const domain = signupDomainInput.value;
+        
+        // Create new user
+        const newUser = {
+          id: `${role}-${Date.now()}`,
+          email: email,
+          password: password,
+          name: name,
+          role: role,
+          domain: domain || null
+        };
+        
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Show success message
+        successMessage.textContent = 'Account created successfully! You can now login.';
+        successMessage.classList.add('show');
+        
+        // Clear form (but don't clear secret key input for security)
+        signupNameInput.value = '';
+        signupEmailInput.value = '';
+        signupPasswordInput.value = '';
+        signupRoleInput.value = '';
+        signupSecretKeyInput.value = '';
+        
+        // Switch to login after 1.5 seconds
+        setTimeout(() => {
+          loginToggle.click();
+          emailInput.value = email;
+          passwordInput.value = password;
+          // Don't auto-fill secret key for security
+        }, 1500);
+      });
+    });
+  </script>
+  <!-- API Utility Script -->
+  <script src="js/api.js"></script>
+  <script>
+    // Update login to use API with fallback
+    (function() {
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const signupNameInput = document.getElementById('signupName');
+      const signupEmailInput = document.getElementById('signupEmail');
+      const signupPasswordInput = document.getElementById('signupPassword');
+      const signupRoleInput = document.getElementById('signupRole');
+      const loginDomainInput = document.getElementById('loginDomain');
+      const signupDomainInput = document.getElementById('signupDomain');
+      const loginSecretKeyInput = document.getElementById('loginSecretKey');
+      const signupSecretKeyInput = document.getElementById('signupSecretKey');
+      const loginToggle = document.getElementById('loginToggle');
+      
+      // Override login form submission
+      if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const email = emailInput.value.trim();
+          const password = passwordInput.value;
+          const domain = loginDomainInput ? loginDomainInput.value : '';
+          const secretKey = loginSecretKeyInput ? loginSecretKeyInput.value.trim() : '';
+          
+          errorMessage.classList.remove('show');
+          successMessage.classList.remove('show');
+          
+          // Validate secret key if required
+          if (secretKey && typeof validateSecretKey === 'function') {
+            const keyValidation = validateSecretKey(secretKey);
+            if (!keyValidation.valid) {
+              errorMessage.textContent = keyValidation.message;
+              errorMessage.classList.add('show');
+              return;
+            }
+          }
+          
+          try {
+            // Try API first
+            if (window.API) {
+              const result = await API.Auth.login(email, password);
+              
+              if (result && result.user && result.token) {
+                // Store user data (API already stores token)
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                if (domain && currentUser.role !== 'admin') {
+                  currentUser.domain = domain;
+                  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+                
+                // Redirect based on role
+                switch(result.user.role) {
+                  case 'admin':
+                    window.location.href = 'admin.html';
+                    break;
+                  case 'leader':
+                    window.location.href = 'team-leader.html';
+                    break;
+                  case 'employee':
+                    window.location.href = 'employee.html';
+                    break;
+                  default:
+                    errorMessage.textContent = 'Unknown user role';
+                    errorMessage.classList.add('show');
+                }
+                return;
+              }
+            }
+            
+            // Fallback to localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+              errorMessage.textContent = 'Invalid email or password';
+              errorMessage.classList.add('show');
+              return;
+            }
+            
+            // Domain validation for non-admin
+            if (user.role !== 'admin' && domain) {
+              if (user.domain && user.domain !== domain) {
+                errorMessage.textContent = 'Invalid domain. You can only login with your assigned domain: ' + user.domain;
+                errorMessage.classList.add('show');
+                return;
+              }
+            }
+            
+            const currentUserData = {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role,
+              ...(domain && { domain: domain })
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+            
+            switch(user.role) {
+              case 'admin':
+                window.location.href = 'admin.html';
+                break;
+              case 'leader':
+                window.location.href = 'team-leader.html';
+                break;
+              case 'employee':
+                window.location.href = 'employee.html';
+                break;
+            }
+          } catch (error) {
+            console.error('Login error:', error);
+            errorMessage.textContent = error.message || 'Login failed. Please try again.';
+            errorMessage.classList.add('show');
+          }
+        });
+      }
+      
+      // Override signup form submission
+      if (signupForm) {
+        signupForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const name = signupNameInput.value.trim();
+          const email = signupEmailInput.value.trim();
+          const password = signupPasswordInput.value;
+          const role = signupRoleInput.value;
+          const secretKey = signupSecretKeyInput ? signupSecretKeyInput.value.trim() : '';
+          const domain = signupDomainInput ? signupDomainInput.value : '';
+          
+          errorMessage.classList.remove('show');
+          successMessage.classList.remove('show');
+          
+          if (!name || !email || !password || !role) {
+            errorMessage.textContent = 'Please fill in all required fields';
+            errorMessage.classList.add('show');
+            return;
+          }
+          
+          if (password.length < 6) {
+            errorMessage.textContent = 'Password must be at least 6 characters';
+            errorMessage.classList.add('show');
+            return;
+          }
+          
+          // Validate secret key if function exists
+          if (secretKey && typeof validateSecretKey === 'function') {
+            const keyValidation = validateSecretKey(secretKey, role);
+            if (!keyValidation.valid) {
+              errorMessage.textContent = keyValidation.message;
+              errorMessage.classList.add('show');
+              return;
+            }
+          }
+          
+          try {
+            // Try API first
+            if (window.API) {
+              const result = await API.Auth.register({ name, email, password, role });
+              
+              if (result && result.user) {
+                successMessage.textContent = 'Account created successfully! You can now login.';
+                successMessage.classList.add('show');
+                
+                // Clear form
+                signupNameInput.value = '';
+                signupEmailInput.value = '';
+                signupPasswordInput.value = '';
+                signupRoleInput.value = '';
+                if (signupSecretKeyInput) signupSecretKeyInput.value = '';
+                
+                // Switch to login after 1.5 seconds
+                setTimeout(() => {
+                  if (loginToggle) loginToggle.click();
+                  emailInput.value = email;
+                  passwordInput.value = password;
+                }, 1500);
+                return;
+              }
+            }
+            
+            // Fallback to localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const existingUser = users.find(u => u.email === email);
+            if (existingUser) {
+              errorMessage.textContent = 'Email already registered. Please login instead.';
+              errorMessage.classList.add('show');
+              return;
+            }
+            
+            const newUser = {
+              id: `${role}-${Date.now()}`,
+              email: email,
+              password: password,
+              name: name,
+              role: role,
+              domain: domain || null
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            successMessage.textContent = 'Account created successfully! You can now login.';
+            successMessage.classList.add('show');
+            
+            signupNameInput.value = '';
+            signupEmailInput.value = '';
+            signupPasswordInput.value = '';
+            signupRoleInput.value = '';
+            if (signupSecretKeyInput) signupSecretKeyInput.value = '';
+            
+            setTimeout(() => {
+              if (loginToggle) loginToggle.click();
+              emailInput.value = email;
+              passwordInput.value = password;
+            }, 1500);
+          } catch (error) {
+            console.error('Signup error:', error);
+            errorMessage.textContent = error.message || 'Signup failed. Please try again.';
+            errorMessage.classList.add('show');
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

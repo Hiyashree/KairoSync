@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Employee Settings</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Dark Mode Styles */
+        .dark body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .dark .sidebar {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+            border-right: 2px solid #404040 !important;
+            border-image: none !important;
+        }
+        
+        .dark .sidebar::before {
+            background: linear-gradient(90deg, rgba(198, 18, 31, 0.2), rgba(255, 105, 180, 0.2), rgba(186, 104, 200, 0.2));
+        }
+        
+        .dark .sidebar-logo {
+            border-bottom: 2px solid #404040 !important;
+            border-image: none !important;
+        }
+        
+        .dark .header {
+            background-color: #2d2d2d;
+            border-bottom-color: #404040;
+        }
+
+        .dark .page-title .title-part-1 {
+            color: #ff6b7a;
+        }
+
+        .dark .search-bar input {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+
+        .dark .search-bar input:focus {
+            border-color: #e63946;
+            background-color: #3a3a3a !important;
+        }
+
+        .dark .notification-icon {
+            color: #b0b0b0;
+        }
+
+        .dark .notification-icon:hover {
+            color: #e63946;
+        }
+
+        .dark .user-name {
+            color: #e0e0e0 !important;
+        }
+
+        .dark .user-role {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .nav-item {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .nav-item:hover {
+            background: #3a3a3a !important;
+            background-color: #3a3a3a !important;
+            color: #e63946 !important;
+        }
+        
+        .dark .nav-item.active {
+            background: #3a1a1a !important;
+            background-color: #3a1a1a !important;
+            color: #e63946 !important;
+            border-left: 4px solid #e63946 !important;
+            border-image: none !important;
+        }
+        
+        .dark .nav-item.active::after {
+            background: linear-gradient(180deg, #e63946, #ff69b4, #ba68c8);
+        }
+        
+        .dark .nav-item::before {
+            background: linear-gradient(180deg, #e63946, #ff69b4, #ba68c8);
+        }
+        
+        .dark .nav-item.logout {
+            color: #999 !important;
+        }
+        
+        .dark [style*="background: #fff"],
+        .dark [style*="background-color: #fff"] {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark [style*="color: #333"] {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark [style*="color: #666"] {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark [style*="border: 2px solid #e0e0e0"] {
+            border-color: #404040 !important;
+        }
+        
+        .dark input[type="text"],
+        .dark input[type="email"],
+        .dark input[type="password"],
+        .dark select {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+        
+        .dark input[disabled],
+        .dark input[readonly] {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+            color: #999 !important;
+            cursor: not-allowed !important;
+        }
+        
+        .dark body {
+            background: #1a1a1a !important;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.02) 0%, transparent 50%);
+        }
+        
+        .dark .main-content {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .content-wrapper {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .settings-content {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .settings-card-wrapper {
+            background: linear-gradient(135deg, rgba(198, 18, 31, 0.15), rgba(255, 105, 180, 0.15), rgba(186, 104, 200, 0.15)) !important;
+        }
+        
+        .dark .settings-card {
+            background: #2d2d2d !important;
+            color: #e0e0e0;
+        }
+        
+        .dark [style*="background: linear-gradient(135deg, #ffffff"],
+        .dark [style*="background: linear-gradient(135deg, rgba(255, 248, 240"],
+        .dark [style*="background: rgba(255, 255, 255"] {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark button {
+            color: white !important;
+        }
+        
+        .dark .btn-primary {
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%) !important;
+            color: white !important;
+        }
+        
+        .dark .btn-primary:hover {
+            background: linear-gradient(135deg, #d62828 0%, #c1121f 100%) !important;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .top-bar {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+
+            .user-info {
+                margin-top: 8px;
+                width: 100%;
+            }
+
+            .content-area {
+                padding: 16px;
+            }
+
+            .settings-section {
+                padding: 16px !important;
+            }
+
+            .settings-section h2 {
+                font-size: 16px !important;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            .settings-section {
+                padding: 12px !important;
+            }
+
+            input, select {
+                width: 100% !important;
+            }
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #ffffff 0%, #fff8f0 50%, #f3e5f5 100%);
+            border-right: 2px solid transparent;
+            border-image: linear-gradient(180deg, rgba(198, 18, 31, 0.3), rgba(255, 105, 180, 0.3), rgba(186, 104, 200, 0.3)) 1;
+            border-image-slice: 1;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(198, 18, 31, 0.1);
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(198, 18, 31, 0.4), rgba(255, 105, 180, 0.4), rgba(186, 104, 200, 0.4));
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, rgba(198, 18, 31, 0.2), rgba(255, 105, 180, 0.2), rgba(186, 104, 200, 0.2)) 1;
+            border-image-slice: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: linear-gradient(90deg, #ffe8e8 0%, #ffe0f0 50%, #f3e5f5 100%);
+            transform: translateX(4px) scale(1.02);
+            color: #c1121f;
+            box-shadow: inset 0 0 20px rgba(198, 18, 31, 0.1);
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: linear-gradient(180deg, #c1121f, #ff69b4, #ba68c8);
+            transition: width 0.3s ease;
+            opacity: 0;
+        }
+        
+        .nav-item:hover::before {
+            width: 3px;
+            opacity: 1;
+        }
+
+        .nav-item.active {
+            color: #c1121f;
+            background: linear-gradient(90deg, #ffe0e0 0%, #ffe0f0 50%, #f3e5f5 100%);
+            border-left: 4px solid transparent;
+            border-image: linear-gradient(180deg, #c1121f, #ff69b4, #ba68c8) 1;
+            border-image-slice: 1;
+            font-weight: 600;
+            box-shadow: inset 0 0 10px rgba(198, 18, 31, 0.1);
+            padding-left: 20px;
+        }
+        
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #c1121f, #ff69b4, #ba68c8);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item.logout {
+            color: #999;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 16px 32px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #e63946, #ff69b4, #ba68c8) 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e63946, #ff69b4, #ba68c8);
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            min-width: 120px;
+        }
+
+        .page-title .title-part-1 {
+            color: #e63946;
+        }
+
+        .page-title .title-part-2 {
+            background: linear-gradient(135deg, #ba68c8 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #e63946;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .search-bar svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            color: #666;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .notification-icon:hover {
+            color: #e63946;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background-color: #e63946;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .notification-dropdown.show {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .notification-clear {
+            background: none;
+            border: none;
+            color: #e63946;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 4px 8px;
+        }
+
+        .notification-clear:hover {
+            text-decoration: underline;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #fff5f5;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #d62828 0%, #c1121f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .user-info:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e63946 0%, #ba68c8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .settings-content {
+            padding: 32px;
+            position: relative;
+            z-index: 1;
+            animation: fade-in 0.6s ease-out;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .settings-content > div:first-child {
+            animation: slide-in 0.8s ease-out;
+        }
+        
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .settings-content > div:first-child h1 {
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ff69b4 60%, #ba68c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(198, 18, 31, 0.2));
+        }
+        
+        .settings-content > div:first-child p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        /* Gradient border wrapper for settings cards */
+        .settings-card-wrapper {
+            position: relative;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(198, 18, 31, 0.2), rgba(255, 105, 180, 0.2), rgba(186, 104, 200, 0.2));
+            margin-bottom: 24px;
+            overflow: hidden;
+            animation: card-float 6s ease-in-out infinite;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .settings-card-wrapper:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(198, 18, 31, 0.25), 0 6px 16px rgba(255, 105, 180, 0.2);
+        }
+        
+        @keyframes card-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        .settings-card-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c1121f, #e63946, #ff69b4, #ba68c8);
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        .settings-card-wrapper::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(198, 18, 31, 0.05) 0%, transparent 70%);
+            animation: rotate-glow 8s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes rotate-glow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .settings-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fff8f0 50%, #f3e5f5 100%);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(198, 18, 31, 0.15), 0 2px 8px rgba(255, 105, 180, 0.1);
+            position: relative;
+            z-index: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .settings-card:hover {
+            box-shadow: 0 8px 32px rgba(198, 18, 31, 0.2), 0 4px 16px rgba(255, 105, 180, 0.15), inset 0 0 40px rgba(255, 105, 180, 0.05);
+        }
+        
+        .settings-card h2 {
+            position: relative;
+            animation: title-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes title-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        /* Button enhanced effects */
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        button:active {
+            transform: scale(0.95) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text"><img src="img/bg removed.png" alt="Graphura"></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="employee.html" class="nav-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryemployee.html" class="nav-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="taskemployee.html" class="nav-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    <span>Tasks</span>
+                </a>
+                <a href="teamemployee.html" class="nav-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Teams</span>
+                </a>
+                <a href="calendaremployee.html" class="nav-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                </a>
+                <a href="settingsemployee.html" class="nav-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="nav-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Log Out</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <span class="title-part-1">Employee</span> <span class="title-part-2">Settings</span>
+                    </h1>
+                    <div class="search-bar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search tasks, projects, or team members...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="notification-container">
+                        <svg class="notification-icon" id="notificationIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="notification-clear" id="clearAllNotifications">Clear all</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info" id="userInfoClickable">
+                        <div class="user-details">
+                            <div class="user-name" id="headerUserName">Admin User</div>
+                            <div class="user-role">Employee</div>
+                        </div>
+                        <div class="user-avatar" id="headerUserAvatar">AU</div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <div style="margin-bottom: 32px;">
+                        <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ff69b4 60%, #ba68c8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(198, 18, 31, 0.2)); letter-spacing: -0.5px;">⚙ Settings</h1>
+                        <p style="color: #666; font-size: 16px; background: linear-gradient(135deg, #666 0%, #999 50%, #666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Manage your account preferences</p>
+                    </div>
+
+                    <!-- ACCOUNT -->
+                    <div class="settings-card-wrapper">
+                        <div class="settings-card">
+                            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(198, 18, 31, 0.3));">👤 Account</h2>
+                        
+                        <!-- Profile Picture -->
+                        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e0e0e0;">
+                            <div style="position: relative; margin-bottom: 12px;">
+                                <div id="settingsUserAvatar" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ff69b4 60%, #ba68c8 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; font-weight: 600; border: 4px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 24px rgba(198, 18, 31, 0.3), 0 4px 12px rgba(255, 105, 180, 0.2); overflow: hidden; background-size: cover; background-position: center; transition: all 0.3s ease;">
+                                    <!-- Avatar content will be inserted here -->
+                                </div>
+                                <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+                                <button id="changeProfilePictureBtn" type="button" style="position: absolute; bottom: 0; right: 0; width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); color: white; border: 3px solid white; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(198, 18, 31, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 16px rgba(198, 18, 31, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.4)'">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Click the camera icon to change your profile picture</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Name</label>
+                                <input type="text" id="settings-name" disabled readonly style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid rgba(198, 18, 31, 0.15); font-size: 15px; background: linear-gradient(135deg, #fff8f0 0%, #f3e5f5 100%); color: #666; cursor: not-allowed;">
+                                <p style="font-size: 12px; color: #999; margin-top: 4px; font-style: italic;">Name is managed by your administrator</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Email</label>
+                                <input type="email" id="settings-email" disabled readonly style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid rgba(198, 18, 31, 0.15); font-size: 15px; background: linear-gradient(135deg, #fff8f0 0%, #f3e5f5 100%); color: #666; cursor: not-allowed;">
+                                <p style="font-size: 12px; color: #999; margin-top: 4px; font-style: italic;">Email cannot be changed</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🌐 Domain</label>
+                                <input type="text" id="settings-domain" disabled readonly style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid rgba(198, 18, 31, 0.15); font-size: 15px; background: linear-gradient(135deg, #fff8f0 0%, #f3e5f5 100%); color: #666; cursor: not-allowed;">
+                                <p style="font-size: 12px; color: #999; margin-top: 4px; font-style: italic;">Domain is managed by your administrator</p>
+                            </div>
+                        </div>
+                            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                <button id="changePasswordBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(198, 18, 31, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(198, 18, 31, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.3)'">Change Password</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APPEARANCE -->
+                    <div class="settings-card-wrapper">
+                        <div class="settings-card">
+                            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #1976d2 0%, #42a5f5 50%, #64b5f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(25, 118, 210, 0.3));" class="settings-section-title">🎨 Appearance</h2>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, rgba(255, 248, 240, 0.8) 0%, rgba(243, 229, 245, 0.8) 100%); border-radius: 16px; border: 1px solid rgba(198, 18, 31, 0.1); box-shadow: 0 2px 8px rgba(198, 18, 31, 0.1); transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 16px rgba(198, 18, 31, 0.2)'; this.style.borderColor='rgba(198, 18, 31, 0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(198, 18, 31, 0.1)'; this.style.borderColor='rgba(198, 18, 31, 0.1)'">
+                            <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); transition: left 0.5s ease;"></div>
+                            <div>
+                                <span style="font-weight: 600; display: block; margin-bottom: 4px; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Dark Mode</span>
+                                <span style="color: #666; font-size: 12px;">Switch between light and dark theme</span>
+                            </div>
+                            <button id="themeToggle" style="width: 52px; height: 28px; background: #e0e0e0; border-radius: 14px; position: relative; border: none; cursor: pointer; transition: background 0.3s; flex-shrink: 0;">
+                                <span style="position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></span>
+                            </button>
+                        </div>
+                            <button id="saveAppearanceBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(56, 142, 60, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(56, 142, 60, 0.3)'">Save Appearance Settings</button>
+                        </div>
+                    </div>
+
+                    <!-- NOTIFICATIONS -->
+                    <div class="settings-card-wrapper">
+                        <div class="settings-card">
+                            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #ff69b4 0%, #ff8ec8 50%, #ffb3d9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.3));" class="settings-section-title">🔔 Notifications</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                            <label style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: linear-gradient(135deg, rgba(255, 248, 240, 0.8) 0%, rgba(243, 229, 245, 0.8) 100%); border-radius: 16px; border: 1px solid rgba(198, 18, 31, 0.1); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 6px rgba(198, 18, 31, 0.08); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateX(4px) scale(1.01)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.15)'; this.style.borderColor='rgba(198, 18, 31, 0.3)'" onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 2px 6px rgba(198, 18, 31, 0.08)'; this.style.borderColor='rgba(198, 18, 31, 0.1)'">
+                                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.2), transparent); transition: left 0.6s ease;" onmouseover="this.style.left='100%'" onmouseout="this.style.left='-100%'"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <input type="checkbox" id="emailNotifications" style="accent-color: #e63946; cursor: pointer; width: 18px; height: 18px;">
+                                    <div>
+                                        <span style="font-weight: 600; display: block; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Email Notifications</span>
+                                        <span style="color: #666; font-size: 12px;">Receive updates via email</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: linear-gradient(135deg, rgba(255, 248, 240, 0.8) 0%, rgba(243, 229, 245, 0.8) 100%); border-radius: 16px; border: 1px solid rgba(198, 18, 31, 0.1); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 6px rgba(198, 18, 31, 0.08); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateX(4px) scale(1.01)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.15)'; this.style.borderColor='rgba(198, 18, 31, 0.3)'" onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 2px 6px rgba(198, 18, 31, 0.08)'; this.style.borderColor='rgba(198, 18, 31, 0.1)'">
+                                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.2), transparent); transition: left 0.6s ease;" onmouseover="this.style.left='100%'" onmouseout="this.style.left='-100%'"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <input type="checkbox" id="pushNotifications" style="accent-color: #e63946; cursor: pointer; width: 18px; height: 18px;">
+                                    <div>
+                                        <span style="font-weight: 600; display: block; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Push Notifications</span>
+                                        <span style="color: #666; font-size: 12px;">Get real-time browser notifications</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: linear-gradient(135deg, rgba(255, 248, 240, 0.8) 0%, rgba(243, 229, 245, 0.8) 100%); border-radius: 16px; border: 1px solid rgba(198, 18, 31, 0.1); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 6px rgba(198, 18, 31, 0.08); position: relative; overflow: hidden;" onmouseover="this.style.transform='translateX(4px) scale(1.01)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.15)'; this.style.borderColor='rgba(198, 18, 31, 0.3)'" onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 2px 6px rgba(198, 18, 31, 0.08)'; this.style.borderColor='rgba(198, 18, 31, 0.1)'">
+                                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.2), transparent); transition: left 0.6s ease;" onmouseover="this.style.left='100%'" onmouseout="this.style.left='-100%'"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <input type="checkbox" id="taskReminders" style="accent-color: #e63946; cursor: pointer; width: 18px; height: 18px;">
+                                    <div>
+                                        <span style="font-weight: 600; display: block; background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ff69b4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Task Reminders</span>
+                                        <span style="color: #666; font-size: 12px;">Get reminded about upcoming tasks</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                            <button id="saveNotificationsBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(56, 142, 60, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(56, 142, 60, 0.3)'">Save Notification Settings</button>
+                        </div>
+                    </div>
+
+                    <!-- LANGUAGE -->
+                    <div class="settings-card-wrapper">
+                        <div class="settings-card">
+                            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #ba68c8 0%, #ce93d8 50%, #e1bee7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(186, 104, 200, 0.3));">🌍 Language & Region</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                            <select id="languageSelect" style="padding: 12px 16px; border-radius: 14px; border: 2px solid rgba(198, 18, 31, 0.2); font-size: 15px; background: rgba(255, 255, 255, 0.8); cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#c1121f'; this.style.boxShadow='0 0 0 3px rgba(198, 18, 31, 0.1), 0 4px 12px rgba(198, 18, 31, 0.15)'; this.style.transform='scale(1.02)'; this.style.background='rgba(255, 255, 255, 1)'" onblur="this.style.borderColor='rgba(198, 18, 31, 0.2)'; this.style.boxShadow='none'; this.style.transform='scale(1)'; this.style.background='rgba(255, 255, 255, 0.8)'" onmouseover="this.style.borderColor='rgba(198, 18, 31, 0.3)'; this.style.boxShadow='0 2px 8px rgba(198, 18, 31, 0.1)'" onmouseout="if(document.activeElement !== this) { this.style.borderColor='rgba(198, 18, 31, 0.2)'; this.style.boxShadow='none'; }">
+                                <option>English</option>
+                                <option>Hindi</option>
+                            </select>
+                            <select id="timezoneSelect" style="padding: 12px 16px; border-radius: 14px; border: 2px solid rgba(198, 18, 31, 0.2); font-size: 15px; background: rgba(255, 255, 255, 0.8); cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#c1121f'; this.style.boxShadow='0 0 0 3px rgba(198, 18, 31, 0.1), 0 4px 12px rgba(198, 18, 31, 0.15)'; this.style.transform='scale(1.02)'; this.style.background='rgba(255, 255, 255, 1)'" onblur="this.style.borderColor='rgba(198, 18, 31, 0.2)'; this.style.boxShadow='none'; this.style.transform='scale(1)'; this.style.background='rgba(255, 255, 255, 0.8)'" onmouseover="this.style.borderColor='rgba(198, 18, 31, 0.3)'; this.style.boxShadow='0 2px 8px rgba(198, 18, 31, 0.1)'" onmouseout="if(document.activeElement !== this) { this.style.borderColor='rgba(198, 18, 31, 0.2)'; this.style.boxShadow='none'; }">
+                                <option>Asia/Kolkata</option>
+                                <option>UTC</option>
+                            </select>
+                        </div>
+                            <button id="saveLanguageBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(56, 142, 60, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(56, 142, 60, 0.3)'">Save Language Settings</button>
+                        </div>
+                    </div>
+
+                    <!-- DANGER -->
+                    <div class="settings-card-wrapper">
+                        <div class="settings-card">
+                            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #d32f2f; background: linear-gradient(135deg, #c1121f 0%, #d32f2f 50%, #e63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">⚠ Danger Zone</h2>
+                        <div style="display: flex; gap: 16px;">
+                            <div style="display: flex; gap: 16px;">
+                                <button id="logoutBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(245, 124, 0, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(245, 124, 0, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(245, 124, 0, 0.3)'">Logout</button>
+                                <button id="deleteAccountBtn" style="padding: 12px 24px; background: linear-gradient(135deg, #c1121f 0%, #d32f2f 50%, #e63946 100%); color: white; border: none; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(198, 18, 31, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(198, 18, 31, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(198, 18, 31, 0.3)'">Delete Account</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Authentication and Role Check
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (currentUser.role !== 'employee') {
+                alert('Access denied. Employee privileges required.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const userNameEl = document.getElementById('headerUserName');
+            const userRoleEl = document.querySelector('.user-role');
+            if (userNameEl) userNameEl.textContent = currentUser.name;
+            if (userRoleEl) userRoleEl.textContent = 'Employee';
+        })();
+
+        // Profile Picture Functions
+        function loadProfilePicture() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            
+            const profilePic = localStorage.getItem('profilePicture_' + currentUser.id) || currentUser.profilePicture;
+            const settingsAvatar = document.getElementById('settingsUserAvatar');
+            const headerAvatar = document.getElementById('headerUserAvatar');
+            
+            if (profilePic) {
+                if (settingsAvatar) {
+                    settingsAvatar.style.backgroundImage = `url(${profilePic})`;
+                    settingsAvatar.style.backgroundSize = 'cover';
+                    settingsAvatar.style.backgroundPosition = 'center';
+                    settingsAvatar.textContent = '';
+                }
+                if (headerAvatar) {
+                    headerAvatar.style.backgroundImage = `url(${profilePic})`;
+                    headerAvatar.style.backgroundSize = 'cover';
+                    headerAvatar.style.backgroundPosition = 'center';
+                    headerAvatar.textContent = '';
+                }
+            } else {
+                const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
+                if (settingsAvatar) {
+                    settingsAvatar.style.backgroundImage = '';
+                    settingsAvatar.textContent = initials;
+                }
+                if (headerAvatar) {
+                    headerAvatar.style.backgroundImage = '';
+                    headerAvatar.textContent = initials;
+                }
+            }
+        }
+        
+        function updateProfilePicture(imageData) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            
+            localStorage.setItem('profilePicture_' + currentUser.id, imageData);
+            currentUser.profilePicture = imageData;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            loadProfilePicture();
+            
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex].profilePicture = imageData;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data from database (localStorage)
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                // Get the most up-to-date user data from users array
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userFromDb = users.find(u => u.id === currentUser.id) || currentUser;
+                
+                // Populate read-only fields from database
+                const nameInput = document.getElementById('settings-name');
+                const emailInput = document.getElementById('settings-email');
+                const domainInput = document.getElementById('settings-domain');
+                
+                if (nameInput) {
+                    nameInput.value = userFromDb.name || currentUser.name || 'Not set';
+                }
+                if (emailInput) {
+                    emailInput.value = userFromDb.email || currentUser.email || 'Not set';
+                }
+                if (domainInput) {
+                    domainInput.value = userFromDb.domain || currentUser.domain || 'Not set';
+                }
+                
+                // Update header with current name
+                const userNameEl = document.getElementById('headerUserName');
+                if (userNameEl) {
+                    userNameEl.textContent = userFromDb.name || currentUser.name || 'User';
+                }
+                
+                loadProfilePicture();
+            }
+
+            // Profile picture upload
+            const changeProfilePictureBtn = document.getElementById('changeProfilePictureBtn');
+            const profilePictureInput = document.getElementById('profilePictureInput');
+            
+            if (changeProfilePictureBtn && profilePictureInput) {
+                changeProfilePictureBtn.addEventListener('click', function() {
+                    profilePictureInput.click();
+                });
+                
+                profilePictureInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert('Image size must be less than 5MB');
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const imageData = event.target.result;
+                            updateProfilePicture(imageData);
+                            alert('Profile picture updated successfully!');
+                        };
+                        reader.onerror = function() {
+                            alert('Error reading file. Please try again.');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Theme toggle - Load saved setting and initialize
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                const html = document.documentElement;
+                const toggleSpan = themeToggle.querySelector('span');
+                
+                // Load saved dark mode setting - default to OFF if not set
+                const settings = JSON.parse(localStorage.getItem('settings_employee') || '{}');
+                const isDarkMode = settings.darkMode === true; // Explicitly check for true
+                
+                // Apply saved setting
+                if (isDarkMode) {
+                    html.classList.add('dark');
+                    themeToggle.style.background = '#4f46e5';
+                    if (toggleSpan) {
+                        toggleSpan.style.transform = 'translateX(24px)';
+                    }
+                } else {
+                    html.classList.remove('dark');
+                    themeToggle.style.background = '#e0e0e0';
+                    if (toggleSpan) {
+                        toggleSpan.style.transform = 'translateX(0)';
+                    }
+                }
+                
+                // Toggle button - only changes visual state, doesn't save
+                themeToggle.addEventListener('click', function() {
+                    html.classList.toggle('dark');
+                    const isDark = html.classList.contains('dark');
+                    // Update visual state only
+                    this.style.background = isDark ? '#4f46e5' : '#e0e0e0';
+                    if (toggleSpan) {
+                        toggleSpan.style.transform = isDark ? 'translateX(24px)' : 'translateX(0)';
+                    }
+                });
+            }
+            
+            // Save Appearance Settings
+            const saveAppearanceBtn = document.getElementById('saveAppearanceBtn');
+            if (saveAppearanceBtn) {
+                saveAppearanceBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const html = document.documentElement;
+                    const isDark = html.classList.contains('dark');
+                    const settings = JSON.parse(localStorage.getItem('settings_employee') || '{}');
+                    settings.darkMode = isDark;
+                    localStorage.setItem('settings_employee', JSON.stringify(settings));
+                    window.dispatchEvent(new Event('settingsUpdated'));
+                    
+                    // Update toggle visual state
+                    const themeToggle = document.getElementById('themeToggle');
+                    if (themeToggle) {
+                        themeToggle.style.background = isDark ? '#4f46e5' : '#e0e0e0';
+                        const toggleSpan = themeToggle.querySelector('span');
+                        if (toggleSpan) {
+                            toggleSpan.style.transform = isDark ? 'translateX(24px)' : 'translateX(0)';
+                        }
+                    }
+                    
+                    alert('Appearance settings saved successfully!');
+                });
+            }
+            
+            // Save Notification Settings
+            const saveNotificationsBtn = document.getElementById('saveNotificationsBtn');
+            if (saveNotificationsBtn) {
+                saveNotificationsBtn.addEventListener('click', function() {
+                    const emailNotifications = document.getElementById('emailNotifications')?.checked || false;
+                    const pushNotifications = document.getElementById('pushNotifications')?.checked || false;
+                    const taskReminders = document.getElementById('taskReminders')?.checked || false;
+                    
+                    const settings = JSON.parse(localStorage.getItem('settings_employee') || '{}');
+                    settings.notifications = {
+                        email: emailNotifications,
+                        push: pushNotifications,
+                        reminders: taskReminders
+                    };
+                    localStorage.setItem('settings_employee', JSON.stringify(settings));
+                    alert('Notification settings saved successfully!');
+                });
+            }
+            
+            // Load notification settings
+            const settings = JSON.parse(localStorage.getItem('settings_employee') || '{}');
+            if (settings.notifications) {
+                const emailNotif = document.getElementById('emailNotifications');
+                const pushNotif = document.getElementById('pushNotifications');
+                const taskRem = document.getElementById('taskReminders');
+                if (emailNotif) emailNotif.checked = settings.notifications.email !== false;
+                if (pushNotif) pushNotif.checked = settings.notifications.push || false;
+                if (taskRem) taskRem.checked = settings.notifications.reminders !== false;
+            }
+            
+            // Save Language Settings
+            const saveLanguageBtn = document.getElementById('saveLanguageBtn');
+            if (saveLanguageBtn) {
+                saveLanguageBtn.addEventListener('click', function() {
+                    const language = document.getElementById('languageSelect')?.value || 'English';
+                    const timezone = document.getElementById('timezoneSelect')?.value || 'Asia/Kolkata';
+                    
+                    const settings = JSON.parse(localStorage.getItem('settings_employee') || '{}');
+                    settings.language = language;
+                    settings.timezone = timezone;
+                    localStorage.setItem('settings_employee', JSON.stringify(settings));
+                    alert('Language settings saved successfully!');
+                });
+            }
+            
+            // Load language settings
+            if (settings.language) {
+                const langSelect = document.getElementById('languageSelect');
+                if (langSelect) langSelect.value = settings.language;
+            }
+            if (settings.timezone) {
+                const tzSelect = document.getElementById('timezoneSelect');
+                if (tzSelect) tzSelect.value = settings.timezone;
+            }
+
+            // Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Do you want to logout?')) {
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+
+            // Logout from sidebar
+            const sidebarLogout = document.querySelector('.nav-item.logout');
+            if (sidebarLogout) {
+                sidebarLogout.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Do you want to logout?')) {
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+            
+            // Notification system
+            function loadNotifications() {
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                if (!currentUser) return;
+                
+                const userNotifications = notifications
+                    .filter(n => n.targetRole === currentUser.role || n.targetRole === 'all' || (n.targetUser && n.targetUser === currentUser.name))
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                const unreadCount = userNotifications.filter(n => !n.read).length;
+                const badge = document.getElementById('notificationBadge');
+                const notificationList = document.getElementById('notificationList');
+                
+                if (badge) {
+                    if (unreadCount > 0) {
+                        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                        badge.classList.add('show');
+                    } else {
+                        badge.classList.remove('show');
+                    }
+                }
+                
+                if (notificationList) {
+                    if (userNotifications.length === 0) {
+                        notificationList.innerHTML = `
+                            <div class="notification-empty">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <p>No notifications</p>
+                            </div>
+                        `;
+                    } else {
+                        notificationList.innerHTML = userNotifications.map(notification => {
+                            const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                            const initials = notification.from ? notification.from.substring(0, 2).toUpperCase() : 'EM';
+                            const unreadClass = !notification.read ? 'unread' : '';
+                            
+                            return `
+                                <div class="notification-item ${unreadClass}" data-id="${notification.id}">
+                                    <div class="notification-icon-small">${initials}</div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">${notification.title || notification.type || 'Notification'}</div>
+                                        <div class="notification-message">${notification.message}</div>
+                                        <div class="notification-time">${timeAgo}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        notificationList.querySelectorAll('.notification-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const id = this.dataset.id;
+                                markNotificationAsRead(id);
+                            });
+                        });
+                    }
+                }
+            }
+            
+            function markNotificationAsRead(id) {
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                const notification = notifications.find(n => n.id === id);
+                if (notification && !notification.read) {
+                    notification.read = true;
+                    localStorage.setItem('notifications', JSON.stringify(notifications));
+                    loadNotifications();
+                }
+            }
+            
+            function clearAllNotifications() {
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                // Filter out notifications that match the current user
+                const remaining = notifications.filter(n => {
+                    const matchesUser = n.targetRole === currentUser.role || 
+                                       n.targetRole === 'all' || 
+                                       (n.targetUser && n.targetUser === currentUser.name);
+                    
+                    // Keep notifications that don't match the current user
+                    return !matchesUser;
+                });
+                
+                localStorage.setItem('notifications', JSON.stringify(remaining));
+                
+                // Dispatch custom event for same-tab updates
+                window.dispatchEvent(new CustomEvent('notificationsUpdated'));
+                
+                loadNotifications();
+            }
+            
+            function getTimeAgo(date) {
+                const now = new Date();
+                const diff = now - date;
+                const seconds = Math.floor(diff / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+                
+                if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+                if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+                if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+                return 'Just now';
+            }
+            
+            // Initialize notifications
+            loadNotifications();
+            
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const clearBtn = document.getElementById('clearAllNotifications');
+            
+            if (notificationIcon && notificationDropdown) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('show');
+                    loadNotifications(); // Refresh when opening
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                        notificationDropdown.classList.remove('show');
+                    }
+                });
+            }
+            
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearAllNotifications();
+                });
+            }
+            
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'notifications' || !e.key) {
+                    loadNotifications();
+                }
+            });
+            
+            // Listen for custom event for same-tab updates
+            window.addEventListener('notificationsUpdated', function() {
+                loadNotifications();
+            });
+
+            // Delete account button
+            const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+            if (deleteAccountBtn) {
+                deleteAccountBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                        if (currentUser) {
+                            const users = JSON.parse(localStorage.getItem('users')) || [];
+                            const updatedUsers = users.filter(u => u.id !== currentUser.id);
+                            localStorage.setItem('users', JSON.stringify(updatedUsers));
+                            localStorage.removeItem('currentUser');
+                            alert('Account deleted successfully.');
+                            window.location.href = 'login.html';
+                        }
+                    }
+                });
+            }
+
+            // Change password button
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            if (changePasswordBtn) {
+                changePasswordBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const newPassword = prompt('Enter new password:');
+                    if (newPassword && newPassword.length >= 6) {
+                        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                        if (currentUser) {
+                            const users = JSON.parse(localStorage.getItem('users')) || [];
+                            const user = users.find(u => u.id === currentUser.id);
+                            if (user) {
+                                user.password = newPassword;
+                                localStorage.setItem('users', JSON.stringify(users));
+                                alert('Password changed successfully!');
+                            }
+                        }
+                    } else if (newPassword) {
+                        alert('Password must be at least 6 characters long.');
+                    }
+                });
+            }
+
+            // Save Settings button
+            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+            if (saveSettingsBtn) {
+                saveSettingsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    saveSettings();
+                });
+            }
+
+            // Load saved settings on page load
+            loadSavedSettings();
+        });
+
+        function saveSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+
+            // Get form values
+            // Note: name, email, and domain are read-only and come from database
+            const emailNotifications = document.getElementById('emailNotifications');
+            const pushNotifications = document.getElementById('pushNotifications');
+            const taskReminders = document.getElementById('taskReminders');
+            const languageSelect = document.getElementById('languageSelect');
+            const timezoneSelect = document.getElementById('timezoneSelect');
+
+            // Name, email, and domain cannot be changed - they come from database
+
+            // Update settings object
+            const settings = {
+                emailNotifications: emailNotifications ? emailNotifications.checked : true,
+                pushNotifications: pushNotifications ? pushNotifications.checked : false,
+                taskReminders: taskReminders ? taskReminders.checked : true,
+                language: languageSelect ? languageSelect.value : 'English',
+                timezone: timezoneSelect ? timezoneSelect.value : 'Asia/Kolkata'
+            };
+
+            // Save to localStorage
+            localStorage.setItem('userSettings_' + currentUser.id, JSON.stringify(settings));
+            currentUser.settings = settings;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            // Update in users array (only settings, not name/email/domain)
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                // Only update settings, not name/email/domain (these come from database)
+                users[userIndex].settings = settings;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            // Update avatar initials if name changed
+            loadProfilePicture();
+
+            // Show success message
+            const saveBtn = document.getElementById('saveSettingsBtn');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = '✓ Saved!';
+            saveBtn.style.background = '#388e3c';
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.style.background = '#e63946';
+            }, 2000);
+
+            alert('Settings saved successfully!');
+        }
+
+        function loadSavedSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+
+            // Load settings from localStorage or user object
+            const savedSettings = JSON.parse(localStorage.getItem('userSettings_' + currentUser.id)) || currentUser.settings || {};
+
+            // Apply saved settings to form
+            const emailNotifications = document.getElementById('emailNotifications');
+            const pushNotifications = document.getElementById('pushNotifications');
+            const taskReminders = document.getElementById('taskReminders');
+            const languageSelect = document.getElementById('languageSelect');
+            const timezoneSelect = document.getElementById('timezoneSelect');
+
+            if (emailNotifications) emailNotifications.checked = savedSettings.emailNotifications !== false;
+            if (pushNotifications) pushNotifications.checked = savedSettings.pushNotifications === true;
+            if (taskReminders) taskReminders.checked = savedSettings.taskReminders !== false;
+            if (languageSelect && savedSettings.language) languageSelect.value = savedSettings.language;
+            if (timezoneSelect && savedSettings.timezone) timezoneSelect.value = savedSettings.timezone;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphura.in - Admin Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8f0 30%, #f3e5f5 70%, #fff5f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Dark Mode Styles */
+        .dark body {
+            background: #1a1a1a;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(186, 104, 200, 0.08) 0%, transparent 50%);
+        }
+        
+        .dark .sidebar {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+            border-right: 2px solid #404040 !important;
+            border-image: none !important;
+        }
+        
+        .dark .sidebar::before {
+            background: linear-gradient(90deg, rgba(198, 18, 31, 0.2), rgba(255, 183, 77, 0.2), rgba(186, 104, 200, 0.2));
+        }
+        
+        .dark .sidebar-logo {
+            border-bottom: 1px solid #404040 !important;
+        }
+        
+        .dark .header {
+            background-color: #2d2d2d;
+            border-bottom-color: #404040;
+        }
+        
+        .dark .sidebar-item {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark .sidebar-item:hover {
+            background: #3a3a3a !important;
+            background-color: #3a3a3a !important;
+        }
+        
+        .dark .sidebar-item.active {
+            background: #3a1a1a !important;
+            background-color: #3a1a1a !important;
+            color: #e63946 !important;
+            border-left: 4px solid #e63946 !important;
+            border-image: none !important;
+        }
+        
+        .dark .sidebar-item.active::after {
+            background: linear-gradient(180deg, #e63946, #ffb74d, #ba68c8);
+        }
+        
+        .dark [style*="background: #fff"],
+        .dark [style*="background-color: #fff"] {
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark [style*="color: #333"] {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark [style*="color: #666"] {
+            color: #b0b0b0 !important;
+        }
+        
+        .dark [style*="border: 1px solid #e0e0e0"],
+        .dark [style*="border: 2px solid #e0e0e0"] {
+            border-color: #404040 !important;
+        }
+        
+        .dark input[type="text"],
+        .dark input[type="search"],
+        .dark select {
+            background-color: #3a3a3a !important;
+            color: #e0e0e0 !important;
+            border-color: #404040 !important;
+        }
+        
+        .dark body {
+            background: #1a1a1a !important;
+        }
+        
+        .dark body::before {
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(198, 18, 31, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 183, 77, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(186, 104, 200, 0.02) 0%, transparent 50%);
+        }
+        
+        .dark .main-content {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .content-wrapper {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .content {
+            background: #1a1a1a !important;
+        }
+        
+        .dark .fc {
+            background: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .fc-theme-standard td,
+        .dark .fc-theme-standard th {
+            border-color: #404040 !important;
+        }
+        
+        .dark .fc-theme-standard .fc-scrollgrid {
+            border-color: #404040 !important;
+        }
+        
+        .dark .fc-theme-standard .fc-daygrid-day {
+            background: #2d2d2d !important;
+        }
+        
+        .dark .fc-theme-standard .fc-col-header-cell {
+            background: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .fc-theme-standard .fc-daygrid-day-number {
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .fc-theme-standard .fc-event {
+            background: #e63946 !important;
+            border-color: #e63946 !important;
+            color: white !important;
+        }
+        
+        .dark .fc-button {
+            background: #3a3a3a !important;
+            border-color: #404040 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .fc-button:hover {
+            background: #4a4a4a !important;
+        }
+        
+        .dark .fc-button-primary:not(:disabled):active,
+        .dark .fc-button-primary:not(:disabled).fc-button-active {
+            background: #e63946 !important;
+            border-color: #e63946 !important;
+        }
+        
+        .dark button {
+            color: white !important;
+        }
+        
+        .dark [style*="background: linear-gradient(135deg, #ffffff"],
+        .dark [style*="background: linear-gradient(135deg, rgba(255, 248, 240"],
+        .dark [style*="background: rgba(255, 255, 255"] {
+            background: #2d2d2d !important;
+            background-color: #2d2d2d !important;
+        }
+        
+        .dark .notification-dropdown {
+            background: #2d2d2d !important;
+        }
+        
+        .dark .notification-header {
+            background: #2d2d2d !important;
+        }
+        
+        .dark .notification-item {
+            background: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .dark .notification-item:hover {
+            background: #3a3a3a !important;
+        }
+        
+        .dark #calendar {
+            background: #2d2d2d !important;
+        }
+        
+        .dark .content::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.01) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 122, 0.01) 0%, transparent 50%);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #ffffff 0%, #fafafa 50%, #f5f5f5 100%);
+            border-right: 2px solid transparent;
+            border-image: linear-gradient(180deg, rgba(198, 18, 31, 0.3), rgba(255, 183, 77, 0.3), rgba(186, 104, 200, 0.3)) 1;
+            border-image-slice: 1;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(198, 18, 31, 0.4), rgba(255, 183, 77, 0.4), rgba(186, 104, 200, 0.4));
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .graphura-text {
+            display: block;
+            width: 180px;
+            height: auto;
+            max-width: 100%;
+        }
+        
+        .graphura-text img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dark .graphura-text img {
+            filter: brightness(1.1);
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background: linear-gradient(90deg, #fff8f0 0%, #ffe0e0 50%, #f3e5f5 100%);
+            transform: translateX(4px);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item.active {
+            color: #c1121f;
+            background: linear-gradient(90deg, #ffe0e0 0%, #fff3e0 50%, #f3e5f5 100%);
+            border-left: 4px solid transparent;
+            border-image: linear-gradient(180deg, #c1121f, #ffb74d, #ba68c8) 1;
+            border-image-slice: 1;
+            font-weight: 600;
+            box-shadow: inset 0 0 10px rgba(198, 18, 31, 0.1);
+            position: relative;
+        }
+        
+        .sidebar-item.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #c1121f, #ffb74d, #ba68c8);
+        }
+
+        .sidebar-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-item.logout {
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 40%, #f5f5f5 80%, #ffffff 100%);
+            padding: 16px 32px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, rgba(198, 18, 31, 0.3), rgba(255, 183, 77, 0.3), rgba(186, 104, 200, 0.3)) 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(198, 18, 31, 0.4), rgba(255, 183, 77, 0.4), rgba(186, 104, 200, 0.4));
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer-header 4s infinite;
+        }
+        
+        @keyframes shimmer-header {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ffb74d 60%, #ba68c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 120px;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 1px 2px rgba(198, 18, 31, 0.15));
+            position: relative;
+        }
+        
+        .page-title::after {
+            content: '📅';
+            position: absolute;
+            right: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            animation: bounce-emoji 2s infinite;
+        }
+        
+        @keyframes bounce-emoji {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-60%) scale(1.1); }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ffb74d 60%, #ba68c8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(198, 18, 31, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            cursor: pointer;
+        }
+        
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: avatar-shine 3s infinite;
+        }
+        
+        @keyframes avatar-shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .user-info:hover .user-avatar {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(198, 18, 31, 0.5);
+        }
+
+        .notification-container {
+            position: relative;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            color: #666;
+            position: relative;
+            transition: color 0.2s;
+        }
+        
+        .notification-icon:hover {
+            color: #e63946;
+        }
+        
+        .user-info:hover .user-avatar {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 6px 20px rgba(198, 18, 31, 0.5);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ffb74d 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 2px 8px rgba(198, 18, 31, 0.5);
+            animation: pulse-badge 2s infinite;
+        }
+        
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: linear-gradient(135deg, #ffffff 0%, #fff8f0 30%, #f3e5f5 70%, #ffffff 100%);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(198, 18, 31, 0.1);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, #c1121f, #ffb74d, #ba68c8) 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe0e0 50%, #f3e5f5 100%);
+        }
+        
+        .notification-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 40%, #ffb74d 70%, #ba68c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .notification-clear {
+            background: none;
+            border: none;
+            color: #e63946;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 4px 8px;
+        }
+
+        .notification-clear:hover {
+            text-decoration: underline;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #fff5f5;
+        }
+
+        .notification-item.unread:hover {
+            background-color: #ffebee;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .content-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, rgba(198, 18, 31, 0.08), transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(255, 183, 77, 0.08), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(186, 104, 200, 0.06), transparent);
+            background-size: 200% 200%;
+            animation: particle-float 20s infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes particle-float {
+            0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+            50% { background-position: 100% 100%, 0% 0%, 50% 50%; }
+        }
+
+        .content {
+            padding: 32px;
+            flex: 1;
+            position: relative;
+        }
+        
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 18, 31, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 122, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .content > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .settings-content {
+            padding: 0;
+        }
+
+        #calendar {
+            background: linear-gradient(135deg, #ffffff 0%, #fff8f0 30%, #f3e5f5 70%, #ffffff 100%);
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 0 40px rgba(255, 183, 77, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #calendar::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #c1121f, #e63946, #ffb74d, #ba68c8, #c1121f);
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+            z-index: -1;
+        }
+        
+        #calendar::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(198, 18, 31, 0.05) 0%, transparent 70%);
+            animation: rotate-bg 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes rotate-bg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* FullCalendar Theme Overrides */
+        .fc {
+            color: #333;
+        }
+        
+        .fc-toolbar-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 30%, #ffb74d 60%, #ba68c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 1px 2px rgba(198, 18, 31, 0.1));
+            opacity: 0.95;
+        }
+        
+        .fc-button {
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ffb74d 100%) !important;
+            border: none !important;
+            color: white !important;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(198, 18, 31, 0.3);
+            transition: all 0.3s ease !important;
+            position: relative !important;
+            overflow: hidden !important;
+            cursor: pointer !important;
+        }
+        
+        .fc-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.7s ease !important;
+            z-index: 1;
+        }
+        
+        .fc-button:hover {
+            background: linear-gradient(135deg, #e63946 0%, #ffb74d 50%, #ba68c8 100%) !important;
+            transform: translateY(-2px) scale(1.03) !important;
+            box-shadow: 0 4px 15px rgba(198, 18, 31, 0.35) !important;
+        }
+        
+        .fc-button:hover::before {
+            left: 100% !important;
+        }
+        
+        .fc-button:active {
+            transform: translateY(0) scale(0.98) !important;
+            box-shadow: 0 2px 8px rgba(198, 18, 31, 0.4) !important;
+        }
+        
+        .fc-button:disabled {
+            background: linear-gradient(135deg, #999 0%, #bbb 100%) !important;
+            opacity: 0.6;
+            box-shadow: none !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+        
+        .fc-button:disabled::before {
+            display: none;
+        }
+        
+        .fc-button-primary:not(:disabled):active,
+        .fc-button-primary:not(:disabled).fc-button-active {
+            background: linear-gradient(135deg, #8b0000 0%, #c1121f 100%) !important;
+            transform: translateY(0) scale(0.95) !important;
+            box-shadow: 0 2px 8px rgba(198, 18, 31, 0.3) !important;
+        }
+        
+        .fc-daygrid-day-number {
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .fc-daygrid-day:hover .fc-daygrid-day-number {
+            color: #c1121f;
+            transform: scale(1.2);
+            font-weight: 700;
+        }
+        
+        .fc-col-header-cell-cushion {
+            color: #c1121f;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffe0e0 0%, #fff3e0 50%, #f3e5f5 100%);
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .fc-col-header-cell {
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd6d6 50%, #ffe0e0 100%);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, #ffcdd2, #ffe0b2, #e1bee7) 1;
+            border-image-slice: 1;
+        }
+        
+        .fc-event {
+            border: none !important;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fc-event::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .fc-event:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 16px rgba(198, 18, 31, 0.3);
+            z-index: 10;
+        }
+        
+        .fc-event:hover::before {
+            left: 100%;
+        }
+        
+        .fc-event-title {
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .fc-event.task-deadline {
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 50%, #ffb74d 100%) !important;
+            color: white !important;
+            border-left: 4px solid #8b0000;
+        }
+        
+        .fc-event.task-overdue {
+            background: linear-gradient(135deg, #8b0000 0%, #c1121f 50%, #e63946 100%) !important;
+            color: white !important;
+            border-left: 4px solid #ff0000;
+            animation: pulse-overdue 2s infinite;
+        }
+        
+        @keyframes pulse-overdue {
+            0%, 100% { box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3); }
+            50% { box-shadow: 0 4px 16px rgba(139, 0, 0, 0.6); }
+        }
+        
+        .fc-event.task-completed {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0e0 50%, #f3e5f5 100%) !important;
+            color: #c1121f !important;
+            border-left: 4px solid #ffb74d;
+            opacity: 0.9;
+        }
+        
+        .fc-event.custom-event {
+            background: linear-gradient(135deg, #e63946 0%, #ffb74d 50%, #ba68c8 100%) !important;
+            color: white !important;
+            border-left: 4px solid #c1121f;
+        }
+        
+        .fc-day-today {
+            background: linear-gradient(135deg, #ffe0e0 0%, #fff3e0 50%, #f3e5f5 100%) !important;
+            position: relative;
+        }
+        
+        .fc-day-today::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c1121f, #e63946, #ffb74d, #ba68c8);
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        .fc-daygrid-day {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(198, 18, 31, 0.1);
+            background: rgba(255, 245, 245, 0.5) !important;
+        }
+        
+        .fc-daygrid-day:hover {
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd6d6 50%, #ffe0e0 100%) !important;
+            transform: scale(1.02);
+            box-shadow: inset 0 0 20px rgba(198, 18, 31, 0.15);
+        }
+        
+        .fc-daygrid-day.fc-day-today {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 50%, #ffe0e0 100%) !important;
+        }
+        
+        .fc-daygrid-day.fc-day-today:hover {
+            background: linear-gradient(135deg, #ffcdd2 0%, #ffb3ba 50%, #ffe0e0 100%) !important;
+        }
+        
+        .fc-scrollgrid {
+            border-color: rgba(198, 18, 31, 0.15) !important;
+            border-radius: 20px !important;
+            overflow: hidden !important;
+        }
+        
+        .fc-scrollgrid-section {
+            border-radius: 20px;
+        }
+        
+        .fc-scrollgrid-section > table {
+            border-radius: 20px;
+        }
+        
+        .fc-scrollgrid-sync-table {
+            border-radius: 20px;
+        }
+        
+        .fc-col-header {
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+        
+        .fc-daygrid-body {
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+        }
+        
+        .fc-daygrid-day-frame {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .fc-daygrid-day-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(198, 18, 31, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .fc-daygrid-day-frame:hover::after {
+            opacity: 1;
+        }
+        
+        .fc-daygrid-day-frame:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Calendar cell numbers with cherry red accents */
+        .fc-daygrid-day-number {
+            position: relative;
+        }
+        
+        .fc-day-today .fc-daygrid-day-number {
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 40%, #ffb74d 70%, #ba68c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 16px;
+        }
+        
+        /* Weekend styling */
+        .fc-day-sat,
+        .fc-day-sun {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe0e0 50%, #f3e5f5 100%) !important;
+        }
+        
+        /* Month view enhancements */
+        .fc-daygrid-body {
+            position: relative;
+        }
+        
+        /* Add cherry blossom effect to calendar */
+        .fc-view-harness {
+            position: relative;
+        }
+        
+        .fc-view-harness::before {
+            content: '🌸';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            opacity: 0.1;
+            z-index: 0;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        /* Sparkle effect for special days */
+        .fc-daygrid-day.has-events::before {
+            content: '✨';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+            opacity: 0.6;
+            animation: sparkle 2s infinite;
+            z-index: 5;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        
+        /* Enhanced modal styling */
+        .modal-overlay {
+            background: rgba(198, 18, 31, 0.3) !important;
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal-box {
+            background: linear-gradient(135deg, #ffffff 0%, #fff8f0 30%, #f3e5f5 70%, #ffffff 100%) !important;
+            border: 2px solid transparent !important;
+            border-image: linear-gradient(135deg, rgba(198, 18, 31, 0.3), rgba(255, 183, 77, 0.3), rgba(186, 104, 200, 0.3)) 1 !important;
+            border-image-slice: 1 !important;
+            box-shadow: 0 20px 60px rgba(198, 18, 31, 0.3) !important;
+        }
+        
+        /* Cherry red scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #fff5f5;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #c1121f 0%, #e63946 40%, #ffb74d 70%, #ba68c8 100%);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #e63946 0%, #ffb74d 50%, #ba68c8 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="graphura-text"><img src="img/bg removed.png" alt="Graphura"></div>
+            </div>
+            <div class="sidebar-nav" id="sidebar-nav">
+                <!-- Navigation will be populated by JavaScript based on user role -->
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">Calendar</h1>
+                </div>
+                <div class="header-right">
+                    <div class="notification-container">
+                        <svg class="notification-icon" id="notificationIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="notification-clear" id="clearAllNotifications">Clear all</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-details">
+                            <div class="user-name" id="user-name">User</div>
+                            <div class="user-role" id="user-role">Role</div>
+                        </div>
+                        <div class="user-avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+                <div class="content dashboard-content" id="dashboardContent">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load and apply settings (dark mode, etc.)
+        function loadSettings() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            const role = currentUser.role;
+            const settingsKey = 'settings_' + role;
+            const settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+            if (settings.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        loadSettings();
+        window.addEventListener('storage', function(e) {
+            if (e.key && e.key.startsWith('settings_')) loadSettings();
+        });
+        window.addEventListener('settingsUpdated', loadSettings);
+        
+        // Authentication and Role Check
+        (function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            // Redirect to login if not authenticated
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Check if user is admin
+            if (currentUser.role !== 'admin') {
+                alert('Access denied. Admin privileges required.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update user display
+            const userNameEl = document.getElementById('user-name');
+            const userRoleEl = document.getElementById('user-role');
+            const userAvatarEl = document.getElementById('user-avatar');
+            
+            if (userNameEl) userNameEl.textContent = currentUser.name;
+            if (userRoleEl) userRoleEl.textContent = 'Administrator';
+            
+            if (userAvatarEl) {
+                const initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                userAvatarEl.textContent = initials;
+            }
+            
+            // Add click handler to redirect to settings page
+            const userInfoEl = document.querySelector('.user-info');
+            if (userInfoEl) {
+                userInfoEl.addEventListener('click', function() {
+                    window.location.href = 'settingsadmin.html';
+                });
+            }
+            
+            // Build navigation for admin
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const navHTML = `
+                <a href="admin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="summaryadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Projects</span>
+                </a>
+                <a href="createadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Create</span>
+                </a>
+                <a href="billing.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Billing & Reports</span>
+                </a>
+                <a href="teamadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Leaders</span>
+                </a>
+                <a href="calendaradmin.html" class="sidebar-item active">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Calendar</span>
+                </a>
+                <a href="settingsadmin.html" class="sidebar-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-item logout">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Log Out</span>
+                </a>
+            `;
+            
+            sidebarNav.innerHTML = navHTML;
+            
+            // Add logout functionality
+            const logoutBtn = sidebarNav.querySelector('.sidebar-item.logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Do you want to logout?')) {
+                        localStorage.removeItem('currentUser');
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+        })();
+
+        // Initialize FullCalendar
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load data from database only
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
+            const currentUserData = JSON.parse(localStorage.getItem('currentUser')) || {};
+            
+            // Filter out tasks without valid projectId - only show tasks under valid projects
+            const validProjectIds = new Set(projects.map(p => p.id));
+            const relevantTasks = tasks.filter(task => {
+                // Task must have a projectId and that project must exist
+                return task.projectId && validProjectIds.has(task.projectId);
+            });
+            
+            // Only use valid custom events from database
+            let customEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
+            
+            // Create calendar events from tasks that are under valid projects
+            const taskEvents = relevantTasks
+  .filter(task => task.dueDate && task.projectId && validProjectIds.has(task.projectId))
+  .map(task => {
+    const dueDate = new Date(task.dueDate);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+
+    let className = 'task-deadline';
+    if (task.status === 'Completed') {
+      className = 'task-completed';
+    } else if (dueDate < now) {
+      className = 'task-overdue';
+    }
+
+    const project = projects.find(p => p.id === task.projectId);
+    // Only show tasks with valid projects
+    if (!project) return null;
+    const title = `${task.title} (${project.name})`;
+
+    const hasTime = task.dueTime && task.dueTime.trim() !== '';
+
+    return {
+      id: 'task-' + task.id,
+      title: title,
+
+      start: hasTime
+        ? task.dueDate + 'T' + task.dueTime
+        : task.dueDate,
+
+      allDay: !hasTime,
+
+      className: className,
+      extendedProps: {
+        type: 'task',
+        taskId: task.id,
+        status: task.status
+      }
+    };
+  })
+  .filter(event => event !== null); // Remove any null entries (invalid tasks)
+
+            
+            // Convert custom events to calendar format
+            const userEvents = customEvents.map(event => ({
+                id: 'custom-' + event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                className: 'custom-event',
+                extendedProps: {
+                    type: 'custom',
+                    eventId: event.id
+                }
+            }));
+            
+            // Combine all events - only include valid tasks and events
+            const allEvents = [...taskEvents.filter(e => e !== null), ...userEvents];
+            
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                selectable: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: allEvents,
+                select: function(info) {
+                    let title = prompt('Enter event title');
+                    if (title) {
+                        const eventId = Date.now() + Math.random().toString(36).substr(2, 9);
+                        const newEvent = {
+                            id: eventId,
+                            title: title,
+                            start: info.startStr,
+                            end: info.endStr ? info.endStr : info.startStr
+                        };
+                        
+                        customEvents.push(newEvent);
+                        localStorage.setItem('calendarEvents', JSON.stringify(customEvents));
+                        
+                        calendar.addEvent({
+                            id: 'custom-' + eventId,
+                            title: title,
+                            start: info.startStr,
+                            end: info.endStr,
+                            className: 'custom-event',
+                            extendedProps: {
+                                type: 'custom',
+                                eventId: eventId
+                            }
+                        });
+                    }
+                    calendar.unselect();
+                },
+                eventClick: function(info) {
+                    const eventType = info.event.extendedProps.type;
+                    if (eventType === 'task') {
+                        const taskId = info.event.extendedProps.taskId;
+                        window.location.href = `taskdetail.html?id=${taskId}`;
+                    } else if (eventType === 'custom') {
+                        const eventId = info.event.extendedProps.eventId;
+                        const deleteEvent = confirm('Delete this event?');
+                        if (deleteEvent) {
+                            customEvents = customEvents.filter(e => e.id != eventId);
+                            localStorage.setItem('calendarEvents', JSON.stringify(customEvents));
+                            info.event.remove();
+                        }
+                    }
+                },
+                eventDidMount: function(info) {
+                    // Add tooltip
+                    const title = info.event.title;
+                    const type = info.event.extendedProps.type;
+                    if (type === 'task') {
+                        const status = info.event.extendedProps.status;
+                        info.el.setAttribute('title', `${title} - Status: ${status}`);
+                    } else {
+                        info.el.setAttribute('title', title);
+                    }
+                }
+            });
+
+            calendar.render();
+            
+            // Refresh calendar when storage changes (from other tabs)
+            window.addEventListener('storage', function() {
+                location.reload();
+            });
+            
+            // Notification system
+            initializeNotifications();
+        });
+        
+        // Notification system functions
+        function loadNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) return;
+            
+            // Filter notifications for current user
+            const userNotifications = notifications
+                .filter(n => n.targetRole === currentUser.role || n.targetRole === 'all' || (n.targetUser && n.targetUser === currentUser.name))
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            const unreadCount = userNotifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+            
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.classList.add('show');
+                } else {
+                    badge.classList.remove('show');
+                }
+            }
+            
+            if (notificationList) {
+                if (userNotifications.length === 0) {
+                    notificationList.innerHTML = `
+                        <div class="notification-empty">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <p>No notifications</p>
+                        </div>
+                    `;
+                } else {
+                    notificationList.innerHTML = userNotifications.map(notification => {
+                        const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                        const initials = notification.from ? notification.from.substring(0, 2).toUpperCase() : 'AD';
+                        const unreadClass = !notification.read ? 'unread' : '';
+                        
+                        return `
+                            <div class="notification-item ${unreadClass}" data-id="${notification.id}">
+                                <div class="notification-icon-small">${initials}</div>
+                                <div class="notification-content">
+                                    <div class="notification-title">${notification.title}</div>
+                                    <div class="notification-message">${notification.message}</div>
+                                    <div class="notification-time">${timeAgo}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    notificationList.querySelectorAll('.notification-item').forEach(item => {
+                        item.addEventListener('click', function() {
+                            const id = this.dataset.id;
+                            markNotificationAsRead(id);
+                        });
+                    });
+                }
+            }
+        }
+        
+        function markNotificationAsRead(id) {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const notification = notifications.find(n => n.id === id);
+            if (notification && !notification.read) {
+                notification.read = true;
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                loadNotifications();
+            }
+        }
+        
+        function clearAllNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            
+            // Filter out notifications that match the current user
+            const remaining = notifications.filter(n => {
+                const matchesUser = n.targetRole === currentUser.role || 
+                                   n.targetRole === 'all' || 
+                                   (n.targetUser && n.targetUser === currentUser.name);
+                
+                // Keep notifications that don't match the current user
+                return !matchesUser;
+            });
+            
+            localStorage.setItem('notifications', JSON.stringify(remaining));
+            
+            // Dispatch custom event for same-tab updates
+            window.dispatchEvent(new CustomEvent('notificationsUpdated'));
+            
+            loadNotifications();
+        }
+        
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+            if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            return 'Just now';
+        }
+
+        // Check for tasks with deadlines within 24 hours and create notifications
+        function checkDeadlineNotifications() {
+            try {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                if (!tasks || tasks.length === 0) return;
+                
+                const now = new Date();
+                const twentyFourHoursLater = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+                
+                tasks.forEach(task => {
+                    // Skip if task is completed or has no due date
+                    if (!task.dueDate || task.status === 'Completed') return;
+                    
+                    const dueDate = new Date(task.dueDate);
+                    
+                    // Check if deadline is within 24 hours (between now and 24 hours from now)
+                    if (dueDate > now && dueDate <= twentyFourHoursLater) {
+                        // Calculate hours until deadline
+                        const hoursUntilDeadline = Math.floor((dueDate - now) / (1000 * 60 * 60));
+                        
+                        // Determine who should receive the notification
+                        let targetRole = null;
+                        let targetUser = null;
+                        
+                        if (task.assignedTo) {
+                            // Find the assigned user
+                            const assignedUser = users.find(u => 
+                                u.name === task.assignedTo || 
+                                u.email === task.assignedTo ||
+                                u.id === task.assignedTo
+                            );
+                            
+                            if (assignedUser) {
+                                targetUser = assignedUser.name;
+                                targetRole = assignedUser.role;
+                            } else {
+                                // If assigned user not found, try to match by name
+                                targetUser = task.assignedTo;
+                            }
+                        }
+                        
+                        // Check if notification already exists for this task deadline
+                        const notificationExists = notifications.some(n => 
+                            n.type === 'deadline' && 
+                            n.taskId === task.id &&
+                            n.deadlineDate === task.dueDate &&
+                            ((targetUser && n.targetUser === targetUser) || 
+                             (targetRole && n.targetRole === targetRole))
+                        );
+                        
+                        if (!notificationExists) {
+                            const hoursText = hoursUntilDeadline === 0 ? 'less than an hour' : 
+                                            hoursUntilDeadline === 1 ? '1 hour' : 
+                                            `${hoursUntilDeadline} hours`;
+                            
+                            const newNotification = {
+                                id: Date.now() + Math.random().toString(36).substr(2, 9),
+                                type: 'deadline',
+                                taskId: task.id,
+                                deadlineDate: task.dueDate,
+                                title: 'Deadline Approaching',
+                                message: `Task "${task.title || 'Untitled Task'}" is due in ${hoursText}.`,
+                                from: 'System',
+                                targetRole: targetRole,
+                                targetUser: targetUser,
+                                timestamp: new Date().toISOString(),
+                                read: false
+                            };
+                            
+                            notifications.push(newNotification);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // Reload notifications if function exists
+                if (typeof loadNotifications === 'function') {
+                    loadNotifications();
+                }
+            } catch (error) {
+                console.error('Error checking deadline notifications:', error);
+            }
+        }
+        
+        function initializeNotifications() {
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const clearBtn = document.getElementById('clearAllNotifications');
+            
+            loadNotifications();
+            
+            if (notificationIcon && notificationDropdown) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('show');
+                    loadNotifications();
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!notificationIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                        notificationDropdown.classList.remove('show');
+                    }
+                });
+            }
+            
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearAllNotifications();
+                });
+            }
+            
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'notifications' || !e.key) {
+                    loadNotifications();
+                }
+            });
+            
+            // Listen for custom event for same-tab updates
+            window.addEventListener('notificationsUpdated', function() {
+                loadNotifications();
+            });
+
+            // Settings removed - now using separate settingsadmin.html page
+        }
+    </script>
+</body>
+</html>
